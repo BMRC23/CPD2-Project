@@ -8,3 +8,5 @@ Members:
   - Cid, Brent Benette F.
   - Mendoza, Christian Rae D.
   - Wang, Kevin Louis H.
+
+HR TOOL SPECS: https://docs.google.com/spreadsheets/d/1APuKFJnujuE1CN1z0Hg33RYUavhyCbGdLFFAn6F2k5c/edit?usp=sharing
