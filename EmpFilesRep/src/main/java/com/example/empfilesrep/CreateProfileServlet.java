@@ -2,6 +2,7 @@ package com.example.empfilesrep;
 
 import java.io.IOException;
 import java.time.LocalDate;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -13,9 +14,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.format.DateTimeParseException;
 
-@WebServlet("/createProfile")
+@WebServlet(name = "CreateProfileServlet", value = "/createProfile")
 public class CreateProfileServlet extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // Retrieve required form parameters
         String firstName = request.getParameter("firstName");
         String middleName = request.getParameter("middleName");
@@ -51,7 +52,6 @@ public class CreateProfileServlet extends HttpServlet {
         LocalDate lastDay = parseDate(request.getParameter("lastDay"));
         LocalDate finalPayReleaseDate = parseDate(request.getParameter("finalPayReleaseDate"));
 
-
         // Onboarding Checklist parameters
         String employeeContractRemarks = request.getParameter("employeeContractRemarks");
         String microsoftAccountRemarks = request.getParameter("microsoftAccountRemarks");
@@ -69,62 +69,62 @@ public class CreateProfileServlet extends HttpServlet {
         String knowledgeTransferSheetRemarks = request.getParameter("knowledgeTransferSheetRemarks");
 
         // Database connection parameters
-        String url = "jdbc:mysql://localhost:3306/EmployeeList";
+        String url = "jdbc:mysql://localhost:3306/employeelist";
         String username = "root";
         String password = "LBYCPD2project";
 
         // SQL query to insert employee data into the database
-        String sql = "INSERT INTO employees (id, firstName, middleName, lastName, jobPosition, dateHired, address, contactNumber, birthdate, sss, tin, philHealth, pagIbig, emergencyContactName, emergencyContactNumber, employeeContractDateCompleted, " +
+        String sql = "INSERT INTO employee (firstName, middleName, lastName, jobPosition, dateHired, address, contactNumber, birthdate, sss, tin, philHealth, pagIbig, emergencyContactName, emergencyContactNumber, employeeContractDateCompleted, " +
                 "employeeContractRemarks, microsoftAccountDateCompleted, microsoftAccountRemarks, issuedAssetsDateCompleted, issuedAssetsRemarks, requiredLicensesDateCompleted, requiredLicensesRemarks, trelloInviteDateCompleted, trelloInviteRemarks, " +
                 "teamsShiftsDateCompleted, teamsShiftsRemarks, enrolToPayrollDateCompleted, enrolToPayrollRemarks, certificateEmploymentDateCompleted, certificateEmploymentRemarks, birForm2316DateCompleted, birForm2316Remarks, returnIssuedAssetsDateCompleted, " +
-                "returnIssuedAssetsRemarks, quitclaimFinalPayDateCompleted, quitclaimFinalPayRemarks, knowledgeTransferSheetDateCompleted, knowledgeTransferSheetRemarks, resignationDate, lastDay, finalPayReleaseDate) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "returnIssuedAssetsRemarks, quitclaimFinalPayDateCompleted, quitclaimFinalPayRemarks, knowledgeTransferSheetDateCompleted, knowledgeTransferSheetRemarks, resignationDate, lastDay, finalPayReleaseDate) " + // Add the name of the missing column here
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DriverManager.getConnection(url, username, password);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             // Set values for the prepared statement
-            stmt.setString(2, firstName);
-            stmt.setString(3, middleName);
-            stmt.setString(4, lastName);
-            stmt.setString(5, jobPosition);
-            stmt.setDate(6, java.sql.Date.valueOf(dateHired));
-            stmt.setString(7, address);
-            stmt.setString(8, contactNumber);
-            stmt.setDate(9, java.sql.Date.valueOf(birthdate));
-            stmt.setString(10, sss);
-            stmt.setString(11, tin);
-            stmt.setString(12, philHealth);
-            stmt.setString(13, pagIbig);
-            stmt.setString(14, emergencyContactName);
-            stmt.setString(15, emergencyContactNumber);
-            stmt.setDate(16, java.sql.Date.valueOf(employeeContractDateCompleted));
-            stmt.setString(17, employeeContractRemarks);
-            stmt.setDate(18, java.sql.Date.valueOf(microsoftAccountDateCompleted));
-            stmt.setString(19, microsoftAccountRemarks);
-            stmt.setDate(20, java.sql.Date.valueOf(issuedAssetsDateCompleted));
-            stmt.setString(21, issuedAssetsRemarks);
-            stmt.setDate(22, java.sql.Date.valueOf(requiredLicensesDateCompleted));
-            stmt.setString(23, requiredLicensesRemarks);
-            stmt.setDate(24, java.sql.Date.valueOf(trelloInviteDateCompleted));
-            stmt.setString(25, trelloInviteRemarks);
-            stmt.setDate(26, java.sql.Date.valueOf(teamsShiftsDateCompleted));
-            stmt.setString(27, teamsShiftsRemarks);
-            stmt.setDate(28, java.sql.Date.valueOf(enrolToPayrollDateCompleted));
-            stmt.setString(29, enrolToPayrollRemarks);
-            stmt.setDate(30, java.sql.Date.valueOf(certificateEmploymentDateCompleted));
-            stmt.setString(31, certificateEmploymentRemarks);
-            stmt.setDate(32, java.sql.Date.valueOf(birForm2316DateCompleted));
-            stmt.setString(33, birForm2316Remarks);
-            stmt.setDate(34, java.sql.Date.valueOf(returnIssuedAssetsDateCompleted));
-            stmt.setString(35, returnIssuedAssetsRemarks);
-            stmt.setDate(36, java.sql.Date.valueOf(quitclaimFinalPayDateCompleted));
-            stmt.setString(37, quitclaimFinalPayRemarks);
-            stmt.setDate(38, java.sql.Date.valueOf(knowledgeTransferSheetDateCompleted));
-            stmt.setString(39, knowledgeTransferSheetRemarks);
-            stmt.setDate(40, java.sql.Date.valueOf(resignationDate));
-            stmt.setDate(41, java.sql.Date.valueOf(lastDay));
-            stmt.setDate(42, java.sql.Date.valueOf(finalPayReleaseDate));
+            stmt.setString(1, firstName);
+            stmt.setString(2, middleName);
+            stmt.setString(3, lastName);
+            stmt.setString(4, jobPosition);
+            stmt.setDate(5, dateHired != null ? java.sql.Date.valueOf(dateHired) : null);
+            stmt.setString(6, address);
+            stmt.setString(7, contactNumber);
+            stmt.setDate(8, birthdate != null ? java.sql.Date.valueOf(birthdate) : null);
+            stmt.setString(9, sss);
+            stmt.setString(10, tin);
+            stmt.setString(11, philHealth);
+            stmt.setString(12, pagIbig);
+            stmt.setString(13, emergencyContactName);
+            stmt.setString(14, emergencyContactNumber);
+            stmt.setDate(15, employeeContractDateCompleted != null ? java.sql.Date.valueOf(employeeContractDateCompleted) : null);
+            stmt.setString(16, employeeContractRemarks);
+            stmt.setDate(17, microsoftAccountDateCompleted != null ? java.sql.Date.valueOf(microsoftAccountDateCompleted) : null);
+            stmt.setString(18, microsoftAccountRemarks);
+            stmt.setDate(19, issuedAssetsDateCompleted != null ? java.sql.Date.valueOf(issuedAssetsDateCompleted) : null);
+            stmt.setString(20, issuedAssetsRemarks);
+            stmt.setDate(21, requiredLicensesDateCompleted != null ? java.sql.Date.valueOf(requiredLicensesDateCompleted) : null);
+            stmt.setString(22, requiredLicensesRemarks);
+            stmt.setDate(23, trelloInviteDateCompleted != null ? java.sql.Date.valueOf(trelloInviteDateCompleted) : null);
+            stmt.setString(24, trelloInviteRemarks);
+            stmt.setDate(25, teamsShiftsDateCompleted != null ? java.sql.Date.valueOf(teamsShiftsDateCompleted) : null);
+            stmt.setString(26, teamsShiftsRemarks);
+            stmt.setDate(27, enrolToPayrollDateCompleted != null ? java.sql.Date.valueOf(enrolToPayrollDateCompleted) : null);
+            stmt.setString(28, enrolToPayrollRemarks);
+            stmt.setDate(29, certificateEmploymentDateCompleted != null ? java.sql.Date.valueOf(certificateEmploymentDateCompleted) : null);
+            stmt.setString(30, certificateEmploymentRemarks);
+            stmt.setDate(31, birForm2316DateCompleted != null ? java.sql.Date.valueOf(birForm2316DateCompleted) : null);
+            stmt.setString(32, birForm2316Remarks);
+            stmt.setDate(33, returnIssuedAssetsDateCompleted != null ? java.sql.Date.valueOf(returnIssuedAssetsDateCompleted) : null);
+            stmt.setString(34, returnIssuedAssetsRemarks);
+            stmt.setDate(35, quitclaimFinalPayDateCompleted != null ? java.sql.Date.valueOf(quitclaimFinalPayDateCompleted) : null);
+            stmt.setString(36, quitclaimFinalPayRemarks);
+            stmt.setDate(37, knowledgeTransferSheetDateCompleted != null ? java.sql.Date.valueOf(knowledgeTransferSheetDateCompleted) : null);
+            stmt.setString(38, knowledgeTransferSheetRemarks);
+            stmt.setDate(39, resignationDate != null ? java.sql.Date.valueOf(resignationDate) : null);
+            stmt.setDate(40, lastDay != null ? java.sql.Date.valueOf(lastDay) : null);
+            stmt.setDate(41, finalPayReleaseDate != null ? java.sql.Date.valueOf(finalPayReleaseDate) : null);
 
             // Execute the query
             int rowsInserted = stmt.executeUpdate();
@@ -140,10 +140,15 @@ public class CreateProfileServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/dashboard.jsp");
 
         } catch (SQLException ex) {
-            System.out.println("An error occurred while inserting the employee: " + ex.getMessage());
             ex.printStackTrace();
+            response.sendRedirect("error.jsp");
         }
     }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.getRequestDispatcher("createProfile.jsp").forward(request, response);
+    }
+
     private LocalDate parseDate(String dateString) {
         if (dateString != null && !dateString.isEmpty()) {
             try {

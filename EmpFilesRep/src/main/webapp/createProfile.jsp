@@ -28,50 +28,10 @@
       width: 100%;
     }
   </style>
-
-  <script>
-    // Function to format date to yyyy-MM-dd
-    function formatDate(dateString) {
-      var date = new Date(dateString);
-      var year = date.getFullYear();
-      var month = ('0' + (date.getMonth() + 1)).slice(-2);
-      var day = ('0' + date.getDate()).slice(-2);
-      return year + '-' + month + '-' + day;
-    }
-
-    // Function to format all date input fields
-    // Function to format all date input fields
-    function formatAllDates() {
-      var dateFields = document.querySelectorAll("input[type='date']");
-      dateFields.forEach(function(field) {
-        if (field.value.trim() !== "") {
-          field.value = formatDate(field.value);
-        } else {
-          // Handle empty date field appropriately
-          console.error("Empty date field encountered.");
-          // You can choose to set it to null or provide some default value
-          // For now, let's set it to an empty string
-          field.value = null; // or null, depending on your preference
-        }
-      });
-    }
-
-
-    // Function to enable/disable editing based on checkbox state
-    function enableEditing(checkbox) {
-      var row = checkbox.parentNode.parentNode;
-      var cells = row.getElementsByTagName('input');
-      for (var i = 1; i < cells.length - 1; i++) {
-        cells[i].disabled = !checkbox.checked;
-      }
-    }
-  </script>
-
 </head>
 <body>
 <h1>Create Profile</h1>
 <form action="createProfile" method="post">
-  <!-- Add form fields for creating a new profile -->
   <!-- EMPLOYEE DETAILS -->
   <h2>EMPLOYEE DETAILS</h2>
   <!-- First Name -->
@@ -126,15 +86,18 @@
 
   <!-- Script to enable editing of columns when checkbox is checked -->
   <script>
-    function enableEditing(checkbox) {
-      var row = checkbox.parentNode.parentNode;
-      var cells = row.getElementsByTagName('td');
-      for (var i = 1; i < cells.length; i++) {
-        if (checkbox.checked) {
-          cells[i].setAttribute('contenteditable', 'true');
-        } else {
-          cells[i].setAttribute('contenteditable', 'false');
-        }
+    function enableEditing(checkbox, dateId, remarksId) {
+      var dateField = document.getElementById(dateId);
+      var remarksField = document.getElementById(remarksId);
+
+      if (checkbox.checked) {
+        dateField.disabled = false;
+        remarksField.disabled = false;
+      } else {
+        dateField.disabled = true;
+        remarksField.disabled = true;
+        dateField.value = ''; // Clear the date field
+        remarksField.value = ''; // Clear the remarks field
       }
     }
   </script>
@@ -150,45 +113,45 @@
     </tr>
     <tr>
       <td>Employee Contract</td>
-      <td><label for="employeeContractDateCompleted"></label><input type="date" id="employeeContractDateCompleted" name="employeeContractDateCompleted"></td>
-      <td><label for="employeeContractRemarks"></label><input type="text" id="employeeContractRemarks" name="employeeContractRemarks"></td>
-      <td><label for="employeeContract"></label><input type="checkbox" id="employeeContract" onchange="enableEditing(this)"></td>
+      <td><label for="employeeContractDateCompleted"></label><input type="date" id="employeeContractDateCompleted" name="employeeContractDateCompleted" disabled></td>
+      <td><label for="employeeContractRemarks"></label><input type="text" id="employeeContractRemarks" name="employeeContractRemarks" disabled></td>
+      <td><label for="employeeContract"></label><input type="checkbox" id="employeeContract" onclick="enableEditing(this, 'employeeContractDateCompleted', 'employeeContractRemarks')"></td>
     </tr>
     <tr>
       <td>Microsoft Account / Email Address</td>
-      <td><label for="microsoftAccountDateCompleted"></label><input type="date" id="microsoftAccountDateCompleted" name="microsoftAccountDateCompleted"></td>
-      <td><label for="microsoftAccountRemarks"></label><input type="text" id="microsoftAccountRemarks" name="microsoftAccountRemarks"></td>
-      <td><label for="microsoftAccount"></label><input type="checkbox" id="microsoftAccount" onchange="enableEditing(this)"></td>
+      <td><label for="microsoftAccountDateCompleted"></label><input type="date" id="microsoftAccountDateCompleted" name="microsoftAccountDateCompleted" disabled></td>
+      <td><label for="microsoftAccountRemarks"></label><input type="text" id="microsoftAccountRemarks" name="microsoftAccountRemarks" disabled></td>
+      <td><label for="microsoftAccount"></label><input type="checkbox" id="microsoftAccount" onchange="enableEditing(this, 'microsoftAccountDateCompleted', 'microsoftAccountRemarks')"></td>
     </tr>
     <tr>
       <td>Issued Assets</td>
-      <td><label for="issuedAssetsDateCompleted"></label><input type="date" id="issuedAssetsDateCompleted" name="issuedAssetsDateCompleted"></td>
-      <td><label for="issuedAssetsRemarks"></label><input type="text" id="issuedAssetsRemarks" name="issuedAssetsRemarks"></td>
-      <td><label for="issuedAssets"></label><input type="checkbox" id="issuedAssets" onchange="enableEditing(this)"></td>
+      <td><label for="issuedAssetsDateCompleted"></label><input type="date" id="issuedAssetsDateCompleted" name="issuedAssetsDateCompleted" disabled></td>
+      <td><label for="issuedAssetsRemarks"></label><input type="text" id="issuedAssetsRemarks" name="issuedAssetsRemarks" disabled></td>
+      <td><label for="issuedAssets"></label><input type="checkbox" id="issuedAssets" onchange="enableEditing(this, 'issuedAssetsDateCompleted', 'issuedAssetsRemarks')"></td>
     </tr>
     <tr>
       <td>Required Licenses</td>
-      <td><label for="requiredLicensesDateCompleted"></label><input type="date" id="requiredLicensesDateCompleted" name="requiredLicensesDateCompleted"></td>
-      <td><label for="requiredLicensesRemarks"></label><input type="text" id="requiredLicensesRemarks" name="requiredLicensesRemarks"></td>
-      <td><label for="requiredLicenses"></label><input type="checkbox" id="requiredLicenses" onchange="enableEditing(this)"></td>
+      <td><label for="requiredLicensesDateCompleted"></label><input type="date" id="requiredLicensesDateCompleted" name="requiredLicensesDateCompleted" disabled></td>
+      <td><label for="requiredLicensesRemarks"></label><input type="text" id="requiredLicensesRemarks" name="requiredLicensesRemarks" disabled></td>
+      <td><label for="requiredLicenses"></label><input type="checkbox" id="requiredLicenses" onchange="enableEditing(this, 'requiredLicensesDateCompleted', 'requiredLicensesRemarks')"></td>
     </tr>
     <tr>
       <td>Trello Invite</td>
-      <td><label for="trelloInviteDateCompleted"></label><input type="date" id="trelloInviteDateCompleted" name="trelloInviteDateCompleted"></td>
-      <td><label for="trelloInviteRemarks"></label><input type="text" id="trelloInviteRemarks" name="trelloInviteRemarks"></td>
-      <td><label for="trelloInvite"></label><input type="checkbox" id="trelloInvite" onchange="enableEditing(this)"></td>
+      <td><label for="trelloInviteDateCompleted"></label><input type="date" id="trelloInviteDateCompleted" name="trelloInviteDateCompleted" disabled></td>
+      <td><label for="trelloInviteRemarks"></label><input type="text" id="trelloInviteRemarks" name="trelloInviteRemarks" disabled></td>
+      <td><label for="trelloInvite"></label><input type="checkbox" id="trelloInvite" onchange="enableEditing(this, 'trelloInviteDateCompleted', 'trelloInviteRemarks')"></td>
     </tr>
     <tr>
       <td>Teams/Shifts</td>
-      <td><label for="teamsShiftsDateCompleted"></label><input type="date" id="teamsShiftsDateCompleted" name="teamsShiftsDateCompleted"></td>
-      <td><label for="teamsShiftsRemarks"></label><input type="text" id="teamsShiftsRemarks" name="teamsShiftsRemarks"></td>
-      <td><label for="teamsShifts"></label><input type="checkbox" id="teamsShifts" onchange="enableEditing(this)"></td>
+      <td><label for="teamsShiftsDateCompleted"></label><input type="date" id="teamsShiftsDateCompleted" name="teamsShiftsDateCompleted" disabled></td>
+      <td><label for="teamsShiftsRemarks"></label><input type="text" id="teamsShiftsRemarks" name="teamsShiftsRemarks" disabled></td>
+      <td><label for="teamsShifts"></label><input type="checkbox" id="teamsShifts" onchange="enableEditing(this, 'teamsShiftsDateCompleted', 'teamsShiftsRemarks')"></td>
     </tr>
     <tr>
       <td>Enrol to Payroll</td>
-      <td><label for="enrolToPayrollDateCompleted"></label><input type="date" id="enrolToPayrollDateCompleted" name="enrolToPayrollDateCompleted"></td>
-      <td><label for="enrolToPayrollRemarks"></label><input type="text" id="enrolToPayrollRemarks" name="enrolToPayrollRemarks"></td>
-      <td><label for="enrolToPayroll"></label><input type="checkbox" id="enrolToPayroll" onchange="enableEditing(this)"></td>
+      <td><label for="enrolToPayrollDateCompleted"></label><input type="date" id="enrolToPayrollDateCompleted" name="enrolToPayrollDateCompleted" disabled></td>
+      <td><label for="enrolToPayrollRemarks"></label><input type="text" id="enrolToPayrollRemarks" name="enrolToPayrollRemarks" disabled></td>
+      <td><label for="enrolToPayroll"></label><input type="checkbox" id="enrolToPayroll" onchange="enableEditing(this, 'enrolToPayrollDateCompleted', 'enrolToPayrollRemarks')"></td>
     </tr>
   </table>
 
@@ -203,33 +166,33 @@
     </tr>
     <tr>
       <td>Certificate of Employment</td>
-      <td><label for="certificateEmploymentDateCompleted"></label><input type="date" id="certificateEmploymentDateCompleted" name="certificateEmploymentDateCompleted"></td>
-      <td><label for="certificateEmploymentRemarks"></label><input type="text" id="certificateEmploymentRemarks" name="certificateEmploymentRemarks"></td>
-      <td><label for="certificateEmployment"></label><input type="checkbox" id="certificateEmployment" onchange="enableEditing(this)"></td>
+      <td><label for="certificateEmploymentDateCompleted"></label><input type="date" id="certificateEmploymentDateCompleted" name="certificateEmploymentDateCompleted" disabled></td>
+      <td><label for="certificateEmploymentRemarks"></label><input type="text" id="certificateEmploymentRemarks" name="certificateEmploymentRemarks" disabled></td>
+      <td><label for="certificateEmployment"></label><input type="checkbox" id="certificateEmployment" onchange="enableEditing(this, 'certificateEmploymentDateCompleted', 'certificateEmploymentRemarks')"></td>
     </tr>
     <tr>
       <td>BIR Form 2316</td>
-      <td><label for="birForm2316DateCompleted"></label><input type="date" id="birForm2316DateCompleted" name="birForm2316DateCompleted"></td>
-      <td><label for="birForm2316Remarks"></label><input type="text" id="birForm2316Remarks" name="birForm2316Remarks"></td>
-      <td><label for="birForm2316"></label><input type="checkbox" id="birForm2316" onchange="enableEditing(this)"></td>
+      <td><label for="birForm2316DateCompleted"></label><input type="date" id="birForm2316DateCompleted" name="birForm2316DateCompleted" disabled></td>
+      <td><label for="birForm2316Remarks"></label><input type="text" id="birForm2316Remarks" name="birForm2316Remarks" disabled></td>
+      <td><label for="birForm2316"></label><input type="checkbox" id="birForm2316" onchange="enableEditing(this, 'birForm2316DateCompleted', 'birForm2316Remarks')"></td>
     </tr>
     <tr>
       <td>Return of Issued Assets</td>
-      <td><label for="returnIssuedAssetsDateCompleted"></label><input type="date" id="returnIssuedAssetsDateCompleted" name="returnIssuedAssetsDateCompleted"></td>
-      <td><label for="returnIssuedAssetsRemarks"></label><input type="text" id="returnIssuedAssetsRemarks" name="returnIssuedAssetsRemarks"></td>
-      <td><label for="returnIssuedAssets"></label><input type="checkbox" id="returnIssuedAssets" onchange="enableEditing(this)"></td>
+      <td><label for="returnIssuedAssetsDateCompleted"></label><input type="date" id="returnIssuedAssetsDateCompleted" name="returnIssuedAssetsDateCompleted" disabled></td>
+      <td><label for="returnIssuedAssetsRemarks"></label><input type="text" id="returnIssuedAssetsRemarks" name="returnIssuedAssetsRemarks" disabled></td>
+      <td><label for="returnIssuedAssets"></label><input type="checkbox" id="returnIssuedAssets" onchange="enableEditing(this, 'returnIssuedAssetsDateCompleted', 'returnIssuedAssetsRemarks')"></td>
     </tr>
     <tr>
       <td>Quitclaim + Final Pay</td>
-      <td><label for="quitclaimFinalPayDateCompleted"></label><input type="date" id="quitclaimFinalPayDateCompleted" name="quitclaimFinalPayDateCompleted"></td>
-      <td><label for="quitclaimFinalPayRemarks"></label><input type="text" id="quitclaimFinalPayRemarks" name="quitclaimFinalPayRemarks"></td>
-      <td><label for="quitclaimFinalPay"></label><input type="checkbox" id="quitclaimFinalPay" onchange="enableEditing(this)"></td>
+      <td><label for="quitclaimFinalPayDateCompleted"></label><input type="date" id="quitclaimFinalPayDateCompleted" name="quitclaimFinalPayDateCompleted" disabled></td>
+      <td><label for="quitclaimFinalPayRemarks"></label><input type="text" id="quitclaimFinalPayRemarks" name="quitclaimFinalPayRemarks" disabled></td>
+      <td><label for="quitclaimFinalPay"></label><input type="checkbox" id="quitclaimFinalPay" onchange="enableEditing(this, 'quitclaimFinalPayDateCompleted', 'quitclaimFinalPayRemarks')"></td>
     </tr>
     <tr>
       <td>Knowledge Transfer Sheet</td>
-      <td><label for="knowledgeTransferSheetDateCompleted"></label><input type="date" id="knowledgeTransferSheetDateCompleted" name="knowledgeTransferSheetDateCompleted"></td>
-      <td><label for="knowledgeTransferSheetRemarks"></label><input type="text" id="knowledgeTransferSheetRemarks" name="knowledgeTransferSheetRemarks"></td>
-      <td><label for="knowledgeTransferSheet"></label><input type="checkbox" id="knowledgeTransferSheet" onchange="enableEditing(this)"></td>
+      <td><label for="knowledgeTransferSheetDateCompleted"></label><input type="date" id="knowledgeTransferSheetDateCompleted" name="knowledgeTransferSheetDateCompleted" disabled></td>
+      <td><label for="knowledgeTransferSheetRemarks"></label><input type="text" id="knowledgeTransferSheetRemarks" name="knowledgeTransferSheetRemarks" disabled></td>
+      <td><label for="knowledgeTransferSheet"></label><input type="checkbox" id="knowledgeTransferSheet" onchange="enableEditing(this, 'knowledgeTransferSheetDateCompleted', 'knowledgeTransferSheetRemarks')"></td>
     </tr>
   </table>
 
@@ -249,8 +212,7 @@
   <!-- RESIGNATION DETAILS -->
   <h2>RESIGNATION DETAILS</h2>
   <!-- Resigned -->
-  <label for="resigned">Resigned?</label>
-  <input type="checkbox" id="resigned" name="resigned" onclick="toggleResignationDetails()"><br>
+  <label for="resigned">Resigned?</label> <input type="checkbox" id="resigned" name="resigned" onclick="toggleResignationDetails()"><br>
   <div id="resignationDetails" style="display: none;">
     <!-- Resignation Date -->
     <label for="resignationDate">Resignation Date:</label>
@@ -267,7 +229,7 @@
   <h2>FILE UPLOAD</h2>
   <!-- Add file upload fields -->
   <!-- Submit Button -->
-  <input type="button" value="Submit" onclick="formatAllDates(); document.forms[0].submit();">
+  <input type="submit" value="Submit">
 </form>
 </body>
 </html>

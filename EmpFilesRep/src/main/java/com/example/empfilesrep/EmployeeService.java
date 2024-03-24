@@ -13,13 +13,21 @@ public class EmployeeService {
     public static List<Employee> getAllEmployeesFromDatabase() {
         List<Employee> employees = new ArrayList<>();
 
+        // Load the MySQL JDBC driver
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            LOGGER.log(Level.SEVERE, "MySQL JDBC Driver not found", e);
+            return employees;
+        }
+
         // Database connection parameters
-        String url = "jdbc:mysql://localhost:3306/EmployeeList";
+        String url = "jdbc:mysql://localhost:3306/employeelist";
         String username = "root";
         String password = "LBYCPD2project";
 
         // SQL query to select all employees
-        String sql = "SELECT * FROM employees";
+        String sql = "SELECT * FROM employee";
 
         try (Connection conn = DriverManager.getConnection(url, username, password);
              Statement stmt = conn.createStatement();
