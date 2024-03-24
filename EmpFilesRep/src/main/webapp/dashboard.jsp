@@ -18,6 +18,7 @@
 </head>
 <body>
 <h1>Employees Dashboard</h1>
+<button onclick="window.location.href='createProfile.jsp'">Create Profile</button>
 <table>
   <tr>
     <th>First Name</th>
@@ -27,16 +28,16 @@
     <th>Date Hired</th>
     <th>Action</th>
   </tr>
-  <c:forEach var="employee" items="${employees}">
-    <tr>
-      <td>${employee.firstName}</td>
-      <td>${employee.middleName}</td>
-      <td>${employee.lastName}</td>
-      <td>${employee.jobPosition}</td>
-      <td>${employee.dateHired}</td>
-      <td><a href="#">View</a></td>
-    </tr>
-  </c:forEach>
+  <% for (com.example.empfilesrep.Employee employee : com.example.empfilesrep.EmployeeService.getAllEmployeesFromDatabase()) { %>
+  <tr>
+    <td><%= employee.getFirstName() %></td>
+    <td><%= employee.getMiddleName() %></td>
+    <td><%= employee.getLastName() %></td>
+    <td><%= employee.getJobPosition() %></td>
+    <td><%= employee.getDateHired() %></td>
+    <td><a href="#">View</a></td>
+  </tr>
+  <% } %>
 </table>
 </body>
 </html>
