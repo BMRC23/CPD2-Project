@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
   <title>Employee Records and File Repository/Dashboard</title>
@@ -8,16 +8,19 @@
       width: 80%;
       margin: 20px auto;
     }
-
     th, td {
       border: 1px solid black;
       padding: 8px;
       text-align: left;
     }
+    h1 {
+      text-align: center;
+    }
   </style>
 </head>
 <body>
 <h1>Employees Dashboard</h1>
+<hr style="border-top: 4px solid black;"> <br>
 <button onclick="window.location.href='createProfile.jsp'">Create Profile</button>
 <table>
   <tr>
@@ -35,7 +38,8 @@
     <td><%= employee.getLastName() %></td>
     <td><%= employee.getJobPosition() %></td>
     <td><%= employee.getDateHired() %></td>
-    <td><a href="#">View</a></td>
+    <td><a href="viewProfile?employeeId=<%= employee.getId() %>">View</a></td>
+
   </tr>
   <% } %>
 </table>

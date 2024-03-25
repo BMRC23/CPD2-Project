@@ -35,7 +35,10 @@ public class EmployeeService {
 
             // Iterate through the result set and create Employee objects
             while (rs.next()) {
+                int employeeId = rs.getInt("id");
+                List<EmployeeFile> employeeFiles = getAllEmployeeFilesFromDatabase(employeeId);
                 Employee employee = new Employee(
+                        rs.getInt("id"),
                         rs.getString("firstName"),
                         rs.getString("middleName"),
                         rs.getString("lastName"),
@@ -44,39 +47,41 @@ public class EmployeeService {
                         rs.getString("address"),
                         rs.getString("contactNumber"),
                         rs.getObject("birthdate", LocalDate.class),
-                        rs.getString("sss"), // Optional, may be null
-                        rs.getString("tin"), // Optional, may be null
-                        rs.getString("philHealth"), // Optional, may be null
-                        rs.getString("pagIbig"), // Optional, may be null
+                        rs.getString("sss"),
+                        rs.getString("tin"),
+                        rs.getString("philHealth"),
+                        rs.getString("pagIbig"),
                         rs.getString("emergencyContactName"),
                         rs.getString("emergencyContactNumber"),
-                        rs.getObject("employeeContractDateCompleted", LocalDate.class), // Optional, may be null
-                        rs.getString("employeeContractRemarks"), // Optional, may be null
-                        rs.getObject("microsoftAccountDateCompleted", LocalDate.class), // Optional, may be null
-                        rs.getString("microsoftAccountRemarks"), // Optional, may be null
-                        rs.getObject("issuedAssetsDateCompleted", LocalDate.class), // Optional, may be null
-                        rs.getString("issuedAssetsRemarks"), // Optional, may be null
-                        rs.getObject("requiredLicensesDateCompleted", LocalDate.class), // Optional, may be null
-                        rs.getString("requiredLicensesRemarks"), // Optional, may be null
-                        rs.getObject("trelloInviteDateCompleted", LocalDate.class), // Optional, may be null
-                        rs.getString("trelloInviteRemarks"), // Optional, may be null
-                        rs.getObject("teamsShiftsDateCompleted", LocalDate.class), // Optional, may be null
-                        rs.getString("teamsShiftsRemarks"), // Optional, may be null
-                        rs.getObject("enrolToPayrollDateCompleted", LocalDate.class), // Optional, may be null
-                        rs.getString("enrolToPayrollRemarks"), // Optional, may be null
-                        rs.getObject("certificateEmploymentDateCompleted", LocalDate.class), // Optional, may be null
-                        rs.getString("certificateEmploymentRemarks"), // Optional, may be null
-                        rs.getObject("birForm2316DateCompleted", LocalDate.class), // Optional, may be null
-                        rs.getString("birForm2316Remarks"), // Optional, may be null
-                        rs.getObject("returnIssuedAssetsDateCompleted", LocalDate.class), // Optional, may be null
-                        rs.getString("returnIssuedAssetsRemarks"), // Optional, may be null
-                        rs.getObject("quitclaimFinalPayDateCompleted", LocalDate.class), // Optional, may be null
-                        rs.getString("quitclaimFinalPayRemarks"), // Optional, may be null
-                        rs.getObject("knowledgeTransferSheetDateCompleted", LocalDate.class), // Optional, may be null
-                        rs.getString("knowledgeTransferSheetRemarks"), // Optional, may be null
-                        rs.getObject("resignationDate", LocalDate.class), // Optional, may be null
-                        rs.getObject("lastDay", LocalDate.class), // Optional, may be null
-                        rs.getObject("finalPayReleaseDate", LocalDate.class) // Optional, may be null
+                        rs.getObject("employeeContractDateCompleted", LocalDate.class),
+                        rs.getString("employeeContractRemarks"),
+                        rs.getObject("microsoftAccountDateCompleted", LocalDate.class),
+                        rs.getString("microsoftAccountRemarks"),
+                        rs.getObject("issuedAssetsDateCompleted", LocalDate.class),
+                        rs.getString("issuedAssetsRemarks"),
+                        rs.getObject("requiredLicensesDateCompleted", LocalDate.class),
+                        rs.getString("requiredLicensesRemarks"),
+                        rs.getObject("trelloInviteDateCompleted", LocalDate.class),
+                        rs.getString("trelloInviteRemarks"),
+                        rs.getObject("teamsShiftsDateCompleted", LocalDate.class),
+                        rs.getString("teamsShiftsRemarks"),
+                        rs.getObject("enrolToPayrollDateCompleted", LocalDate.class),
+                        rs.getString("enrolToPayrollRemarks"),
+                        rs.getObject("certificateEmploymentDateCompleted", LocalDate.class),
+                        rs.getString("certificateEmploymentRemarks"),
+                        rs.getObject("birForm2316DateCompleted", LocalDate.class),
+                        rs.getString("birForm2316Remarks"),
+                        rs.getObject("returnIssuedAssetsDateCompleted", LocalDate.class),
+                        rs.getString("returnIssuedAssetsRemarks"),
+                        rs.getObject("quitclaimFinalPayDateCompleted", LocalDate.class),
+                        rs.getString("quitclaimFinalPayRemarks"),
+                        rs.getObject("knowledgeTransferSheetDateCompleted", LocalDate.class),
+                        rs.getString("knowledgeTransferSheetRemarks"),
+                        rs.getBoolean("resigned"),
+                        rs.getObject("resignationDate", LocalDate.class),
+                        rs.getObject("lastDay", LocalDate.class),
+                        rs.getObject("finalPayReleaseDate", LocalDate.class),
+                        employeeFiles
                 );
                 employees.add(employee);
             }
@@ -86,4 +91,131 @@ public class EmployeeService {
 
         return employees;
     }
+
+
+    public static List<EmployeeFile> getAllEmployeeFilesFromDatabase(int id) {
+        List<EmployeeFile> employeeFiles = new ArrayList<>();
+
+        // Load the MySQL JDBC driver
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            LOGGER.log(Level.SEVERE, "MySQL JDBC Driver not found", e);
+            return employeeFiles;
+        }
+
+        // Database connection parameters
+        String url = "jdbc:mysql://localhost:3306/employeelist";
+        String username = "root";
+        String password = "LBYCPD2project";
+
+        // SQL query to select all employee files
+        String sql = "SELECT * FROM employeefiles WHERE employee_id = ?";
+
+        try (Connection conn = DriverManager.getConnection(url, username, password);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+
+            // Iterate through the result set and create EmployeeFile objects
+            while (rs.next()) {
+                EmployeeFile employeeFile = new EmployeeFile(
+                        rs.getInt("id"),
+                        rs.getInt("employee_id"),
+                        rs.getString("filename"),
+                        rs.getString("filetype"),
+                        rs.getBytes("filedata")
+                );
+                employeeFiles.add(employeeFile);
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error retrieving employee files from the database", e);
+        }
+
+        return employeeFiles;
+    }
+
+    public static Employee getEmployeeById(int employeeId) {
+        Employee employee = null;
+
+        // Load the MySQL JDBC driver
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            LOGGER.log(Level.SEVERE, "MySQL JDBC Driver not found", e);
+            return null;
+        }
+
+        // Database connection parameters
+        String url = "jdbc:mysql://localhost:3306/employeelist";
+        String username = "root";
+        String password = "LBYCPD2project";
+
+        // SQL query to select an employee by ID
+        String sql = "SELECT * FROM employee WHERE id = ?";
+
+        try (Connection conn = DriverManager.getConnection(url, username, password);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, employeeId);
+            ResultSet rs = pstmt.executeQuery();
+
+            // If the result set contains a row, create the Employee object
+            if (rs.next()) {
+                List<EmployeeFile> employeeFiles = getAllEmployeeFilesFromDatabase(employeeId);
+                employee = new Employee(
+                        rs.getInt("id"),
+                        rs.getString("firstName"),
+                        rs.getString("middleName"),
+                        rs.getString("lastName"),
+                        rs.getString("jobPosition"),
+                        rs.getObject("dateHired", LocalDate.class),
+                        rs.getString("address"),
+                        rs.getString("contactNumber"),
+                        rs.getObject("birthdate", LocalDate.class),
+                        rs.getString("sss"),
+                        rs.getString("tin"),
+                        rs.getString("philHealth"),
+                        rs.getString("pagIbig"),
+                        rs.getString("emergencyContactName"),
+                        rs.getString("emergencyContactNumber"),
+                        rs.getObject("employeeContractDateCompleted", LocalDate.class),
+                        rs.getString("employeeContractRemarks"),
+                        rs.getObject("microsoftAccountDateCompleted", LocalDate.class),
+                        rs.getString("microsoftAccountRemarks"),
+                        rs.getObject("issuedAssetsDateCompleted", LocalDate.class),
+                        rs.getString("issuedAssetsRemarks"),
+                        rs.getObject("requiredLicensesDateCompleted", LocalDate.class),
+                        rs.getString("requiredLicensesRemarks"),
+                        rs.getObject("trelloInviteDateCompleted", LocalDate.class),
+                        rs.getString("trelloInviteRemarks"),
+                        rs.getObject("teamsShiftsDateCompleted", LocalDate.class),
+                        rs.getString("teamsShiftsRemarks"),
+                        rs.getObject("enrolToPayrollDateCompleted", LocalDate.class),
+                        rs.getString("enrolToPayrollRemarks"),
+                        rs.getObject("certificateEmploymentDateCompleted", LocalDate.class),
+                        rs.getString("certificateEmploymentRemarks"),
+                        rs.getObject("birForm2316DateCompleted", LocalDate.class),
+                        rs.getString("birForm2316Remarks"),
+                        rs.getObject("returnIssuedAssetsDateCompleted", LocalDate.class),
+                        rs.getString("returnIssuedAssetsRemarks"),
+                        rs.getObject("quitclaimFinalPayDateCompleted", LocalDate.class),
+                        rs.getString("quitclaimFinalPayRemarks"),
+                        rs.getObject("knowledgeTransferSheetDateCompleted", LocalDate.class),
+                        rs.getString("knowledgeTransferSheetRemarks"),
+                        rs.getBoolean("resigned"),
+                        rs.getObject("resignationDate", LocalDate.class),
+                        rs.getObject("lastDay", LocalDate.class),
+                        rs.getObject("finalPayReleaseDate", LocalDate.class),
+                        employeeFiles
+                );
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error retrieving employee from the database", e);
+        }
+
+        return employee;
+    }
+
 }

@@ -1,8 +1,10 @@
 package com.example.empfilesrep;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class Employee {
+    private int id;
     private String firstName;
     private String middleName;
     private String lastName;
@@ -47,12 +49,17 @@ public class Employee {
     private String knowledgeTransferSheetRemarks;
 
     // Additional fields for resignation details
+    private boolean isResigned;
     private LocalDate resignationDate;
     private LocalDate lastDay;
     private LocalDate finalPayReleaseDate;
 
+    // New field
+    private List<EmployeeFile> employeeFiles;
+
+
     // Constructor including all fields
-    public Employee(String firstName, String middleName, String lastName, String jobPosition, LocalDate dateHired, String address, String contactNumber, LocalDate birthdate,
+    public Employee(int id, String firstName, String middleName, String lastName, String jobPosition, LocalDate dateHired, String address, String contactNumber, LocalDate birthdate,
                     String sss, String tin, String philHealth, String pagIbig, String emergencyContactName, String emergencyContactNumber,
                     LocalDate employeeContractDateCompleted, String employeeContractRemarks, LocalDate microsoftAccountDateCompleted, String microsoftAccountRemarks,
                     LocalDate issuedAssetsDateCompleted, String issuedAssetsRemarks, LocalDate requiredLicensesDateCompleted, String requiredLicensesRemarks,
@@ -60,9 +67,10 @@ public class Employee {
                     LocalDate enrolToPayrollDateCompleted, String enrolToPayrollRemarks, LocalDate certificateEmploymentDateCompleted,
                     String certificateEmploymentRemarks, LocalDate birForm2316DateCompleted, String birForm2316Remarks, LocalDate returnIssuedAssetsDateCompleted,
                     String returnIssuedAssetsRemarks, LocalDate quitclaimFinalPayDateCompleted, String quitclaimFinalPayRemarks,
-                    LocalDate knowledgeTransferSheetDateCompleted, String knowledgeTransferSheetRemarks, LocalDate resignationDate,
-                    LocalDate lastDay, LocalDate finalPayReleaseDate) {
+                    LocalDate knowledgeTransferSheetDateCompleted, String knowledgeTransferSheetRemarks, boolean isResigned, LocalDate resignationDate,
+                    LocalDate lastDay, LocalDate finalPayReleaseDate, List<EmployeeFile> employeeFiles) {
         // Assign parameters to fields
+        this.id = id;
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
@@ -101,11 +109,18 @@ public class Employee {
         this.quitclaimFinalPayRemarks = quitclaimFinalPayRemarks;
         this.knowledgeTransferSheetDateCompleted = knowledgeTransferSheetDateCompleted;
         this.knowledgeTransferSheetRemarks = knowledgeTransferSheetRemarks;
+        this.isResigned = isResigned;
         this.resignationDate = resignationDate;
         this.lastDay = lastDay;
         this.finalPayReleaseDate = finalPayReleaseDate;
+        this.employeeFiles = employeeFiles;
     }
 
+    public int getId() { return id; }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -411,6 +426,14 @@ public class Employee {
         this.knowledgeTransferSheetRemarks = knowledgeTransferSheetRemarks;
     }
 
+    public boolean isResigned() {
+        return isResigned;
+    }
+
+    public void setResigned(boolean resigned) {
+        isResigned = resigned;
+    }
+
     public LocalDate getResignationDate() {
         return resignationDate;
     }
@@ -435,4 +458,10 @@ public class Employee {
         this.finalPayReleaseDate = finalPayReleaseDate;
     }
 
+    public List<EmployeeFile> getEmployeeFiles() {
+        return employeeFiles;
+    }
+
+    public void setEmployeeFiles(List<EmployeeFile> employeeFiles) {
+    }
 }

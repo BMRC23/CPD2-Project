@@ -9,7 +9,12 @@
         }
         form {
             display: inline-block;
-            text-align: left;
+            text-align: center;
+        }
+
+        label, input[type="text"], input[type="password"] {
+            display: inline-block;
+            margin: 5px;
         }
         input[type="submit"] {
             display: block;
@@ -20,10 +25,12 @@
 <body>
 <form action="login" method="post">
     <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required><br>
+    <input type="text" id="username" name="username" required>
+    <br><br>
 
     <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required><br>
+    <input type="password" id="password" name="password" required>
+    <br><br>
 
     <input type="submit" value="Login">
     <c:if test="${not empty errorMessage}">
