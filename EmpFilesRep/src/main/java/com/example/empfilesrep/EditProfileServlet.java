@@ -109,11 +109,11 @@ public class EditProfileServlet extends HttpServlet {
         String password = "LBYCPD2project";
 
         // SQL query to update employee data in the database
-        String sqlEmployee = "UPDATE employee (firstName, middleName, lastName, jobPosition, dateHired, address, contactNumber, birthdate, sss, tin, philHealth, pagIbig, emergencyContactName, emergencyContactNumber, employeeContractDateCompleted, " +
-                "employeeContractRemarks, microsoftAccountDateCompleted, microsoftAccountRemarks, issuedAssetsDateCompleted, issuedAssetsRemarks, requiredLicensesDateCompleted, requiredLicensesRemarks, trelloInviteDateCompleted, trelloInviteRemarks, " +
-                "teamsShiftsDateCompleted, teamsShiftsRemarks, enrolToPayrollDateCompleted, enrolToPayrollRemarks, certificateEmploymentDateCompleted, certificateEmploymentRemarks, birForm2316DateCompleted, birForm2316Remarks, returnIssuedAssetsDateCompleted, " +
-                "returnIssuedAssetsRemarks, quitclaimFinalPayDateCompleted, quitclaimFinalPayRemarks, knowledgeTransferSheetDateCompleted, knowledgeTransferSheetRemarks, resigned, resignationDate, lastDay, finalPayReleaseDate) " + // Add the name of the missing column here
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sqlEmployee = "UPDATE employee SET firstName=?, middleName=?, lastName=?, jobPosition=?, dateHired=?, address=?, contactNumber=?, birthdate=?, sss=?, tin=?, philHealth=?, pagIbig=?, emergencyContactName=?, emergencyContactNumber=?, employeeContractDateCompleted=?, " +
+                "employeeContractRemarks=?, microsoftAccountDateCompleted=?, microsoftAccountRemarks=?, issuedAssetsDateCompleted=?, issuedAssetsRemarks=?, requiredLicensesDateCompleted=?, requiredLicensesRemarks=?, trelloInviteDateCompleted=?, trelloInviteRemarks=?, " +
+                "teamsShiftsDateCompleted=?, teamsShiftsRemarks=?, enrolToPayrollDateCompleted=?, enrolToPayrollRemarks=?, certificateEmploymentDateCompleted=?, certificateEmploymentRemarks=?, birForm2316DateCompleted=?, birForm2316Remarks=?, returnIssuedAssetsDateCompleted=?, " +
+                "returnIssuedAssetsRemarks=?, quitclaimFinalPayDateCompleted=?, quitclaimFinalPayRemarks=?, knowledgeTransferSheetDateCompleted=?, knowledgeTransferSheetRemarks=?, resigned=?, resignationDate=?, lastDay=?, finalPayReleaseDate=? WHERE id=?"; // Add the name of the missing column here
+        
         String sqlFile = "UPDATE EmployeeFiles (employee_id, filename, filetype, filedata) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = DriverManager.getConnection(url, username, password);
@@ -162,6 +162,7 @@ public class EditProfileServlet extends HttpServlet {
             stmtEmployee.setDate(40, resignationDate != null ? java.sql.Date.valueOf(resignationDate) : null);
             stmtEmployee.setDate(41, lastDay != null ? java.sql.Date.valueOf(lastDay) : null);
             stmtEmployee.setDate(42, finalPayReleaseDate != null ? java.sql.Date.valueOf(finalPayReleaseDate) : null);
+            stmtEmployee.setInt(43, id);
 
             int affectedRows = stmtEmployee.executeUpdate();
             if (affectedRows == 0) {
