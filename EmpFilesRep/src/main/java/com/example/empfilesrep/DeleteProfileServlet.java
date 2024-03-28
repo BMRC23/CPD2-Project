@@ -21,7 +21,7 @@ public class DeleteProfileServlet extends HttpServlet {
         // Database connection parameters
         String url = "jdbc:mysql://localhost:3306/employeelist";
         String username = "root";
-        String password = "your_database_password";
+        String password = "LBYCPD2project";
 
         // SQL query to delete employee record by ID
         String sql = "DELETE FROM employee WHERE id = ?";
