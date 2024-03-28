@@ -78,29 +78,29 @@
     <h2>EMPLOYEE DETAILS</h2>
     <!-- First Name -->
     <label for="firstName">First Name: <span style="color: red;">*</span></label>
-    <input type="text" id="firstName" name="firstName" value="<%= employee.getFirstName() %>" required><br>
+    <input type="text" id="firstName" name="firstName" value="<%= employee.getFirstName() %>" required disabled><br>
     <!-- Middle Name -->
     <label for="middleName">Middle Name: <span style="color: red;">*</span></label>
-    <input type="text" id="middleName" name="middleName" value="<%= employee.getMiddleName() %>" required><br>
+    <input type="text" id="middleName" name="middleName" value="<%= employee.getMiddleName() %>" required disabled><br>
     <!-- Last Name -->
     <label for="lastName">Last Name: <span style="color: red;">*</span></label>
-    <input type="text" id="lastName" name="lastName" value="<%= employee.getLastName() %>" required><br>
+    <input type="text" id="lastName" name="lastName" value="<%= employee.getLastName() %>" required disabled><br>
     <!-- Job Position -->
     <label for="jobPosition">Job Position: <span style="color: red;">*</span></label>
-    <input type="text" id="jobPosition" name="jobPosition" value="<%= employee.getJobPosition() %>" required><br>
+    <input type="text" id="jobPosition" name="jobPosition" value="<%= employee.getJobPosition() %>" required disabled><br>
     <!-- Date Hired -->
     <label for="dateHired">Date Hired: <span style="color: red;">*</span></label>
-    <input type="date" id="dateHired" name="dateHired" value="<%= employee.getDateHired() %>" required><br>
+    <input type="date" id="dateHired" name="dateHired" value="<%= employee.getDateHired() %>" required disabled><br>
     <br>
     <!-- Address -->
     <label for="address">Address: <span style="color: red;">*</span></label>
-    <input type="text" id="address" name="address" value="<%= employee.getAddress() %>" required><br>
+    <input type="text" id="address" name="address" value="<%= employee.getAddress() %>" required disabled><br>
     <!-- Contact Number -->
     <label for="contactNumber">Contact Number: <span style="color: red;">*</span></label>
-    <input type="text" id="contactNumber" name="contactNumber" value="<%= employee.getContactNumber() %>" required><br>
+    <input type="text" id="contactNumber" name="contactNumber" value="<%= employee.getContactNumber() %>" required disabled><br>
     <!-- Birthdate -->
     <label for="birthdate">Birthdate: <span style="color: red;">*</span></label>
-    <input type="date" id="birthdate" name="birthdate" value="<%= employee.getBirthdate() %>" required><br>
+    <input type="date" id="birthdate" name="birthdate" value="<%= employee.getBirthdate() %>" required disabled><br>
     <br>
     <br>
     <hr style="border-top: 2px solid black;">
@@ -127,10 +127,10 @@
     <h2>EMERGENCY CONTACT DETAILS</h2>
     <!-- Emergency Contact Name -->
     <label for="emergencyContactName">Emergency Contact Name: <span style="color: red;">*</span></label>
-    <input type="text" id="emergencyContactName" name="emergencyContactName" value="<%=employee.getEmergencyContactName()%>" required><br>
+    <input type="text" id="emergencyContactName" name="emergencyContactName" value="<%=employee.getEmergencyContactName()%>" required disabled><br>
     <!-- Emergency Contact Number -->
     <label for="emergencyContactNumber">Emergency Contact Number: <span style="color: red;">*</span></label>
-    <input type="text" id="emergencyContactNumber" name="emergencyContactNumber" value="<%=employee.getEmergencyContactNumber()%>" required><br>
+    <input type="text" id="emergencyContactNumber" name="emergencyContactNumber" value="<%=employee.getEmergencyContactNumber()%>" required disabled><br>
     <br>
     <br>
     <hr style="border-top: 2px solid black;">
@@ -282,7 +282,7 @@
     <!-- Script to enable or disable editing of fields -->
     <script>
         function toggleFields() {
-            var fields = document.querySelectorAll('input[type="text"], input[type="date"], input[type="checkbox"]');
+            var fields = document.querySelectorAll('input[type="text"], input[type="date"], input[type="checkbox"], input[type="file"]');
             fields.forEach(function (field) {
                 field.disabled = !field.disabled;
             });
