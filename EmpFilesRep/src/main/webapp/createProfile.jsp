@@ -24,12 +24,25 @@
       margin-bottom: 10px;
       font-size: 14px; /* Adjust font size */
     }
+    .button-container {
+      text-align: left;
+      margin-bottom: 10px;
+    }
+    .button-container button {
+      margin-right: 10px;
+    }
     table {
       width: 100%;
     }
   </style>
 </head>
 <body>
+
+<!--Back Button-->
+<div class="button-container">
+  <button onclick="window.location.href='dashboard.jsp'">Back to Dashboard</button>
+</div>
+
 <h1>Create Profile</h1>
 <hr style="border-top: 4px solid black;">
 <form action="createProfile" method="post" enctype="multipart/form-data">
