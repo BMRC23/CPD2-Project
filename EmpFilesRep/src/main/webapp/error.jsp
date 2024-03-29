@@ -11,9 +11,9 @@
 </head>
 <body>
 <h1>Error</h1>
-<p style="color: red;">${errorMessage}</p>
+<p style="color: red;">Invalid</p>
 <!-- Button that will go back to the previous page -->
-<button onclick="goBack()">Go back to Previous Page</button>
+<button onclick="goBack()">Go Back to Previous Page</button>
 <script>
   // JavaScript function to go back to the previous page
   function goBack() {

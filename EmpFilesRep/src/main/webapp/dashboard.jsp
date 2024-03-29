@@ -22,6 +22,7 @@
 <h1>Employees Dashboard</h1>
 <hr style="border-top: 4px solid black;"> <br>
 <button onclick="window.location.href='createProfile.jsp'">Create Profile</button>
+<button onclick="window.location.href='login.jsp'">Log Out</button>
 <table>
   <tr>
     <th>First Name</th>

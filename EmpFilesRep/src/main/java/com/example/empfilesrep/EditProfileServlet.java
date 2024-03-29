@@ -113,12 +113,18 @@ public class EditProfileServlet extends HttpServlet {
                 "employeeContractRemarks=?, microsoftAccountDateCompleted=?, microsoftAccountRemarks=?, issuedAssetsDateCompleted=?, issuedAssetsRemarks=?, requiredLicensesDateCompleted=?, requiredLicensesRemarks=?, trelloInviteDateCompleted=?, trelloInviteRemarks=?, " +
                 "teamsShiftsDateCompleted=?, teamsShiftsRemarks=?, enrolToPayrollDateCompleted=?, enrolToPayrollRemarks=?, certificateEmploymentDateCompleted=?, certificateEmploymentRemarks=?, birForm2316DateCompleted=?, birForm2316Remarks=?, returnIssuedAssetsDateCompleted=?, " +
                 "returnIssuedAssetsRemarks=?, quitclaimFinalPayDateCompleted=?, quitclaimFinalPayRemarks=?, knowledgeTransferSheetDateCompleted=?, knowledgeTransferSheetRemarks=?, resigned=?, resignationDate=?, lastDay=?, finalPayReleaseDate=? WHERE id=?"; // Add the name of the missing column here
-        
-        String sqlFile = "UPDATE EmployeeFiles (employee_id, filename, filetype, filedata) VALUES (?, ?, ?, ?)";
+
+        String sqlFile = "INSERT INTO EmployeeFiles (employee_id, filename, filetype, filedata) VALUES (?, ?, ?, ?)";
+
+        String sql = "SELECT id, filename, filetype FROM EmployeeFiles WHERE employee_id = ?";
+
 
         try (Connection conn = DriverManager.getConnection(url, username, password);
              PreparedStatement stmtEmployee = conn.prepareStatement(sqlEmployee);
-             PreparedStatement stmtFile = conn.prepareStatement(sqlFile)) {
+             PreparedStatement stmtFile = conn.prepareStatement(sqlFile))
+
+
+        {
 
             stmtEmployee.setString(1, firstName);
             stmtEmployee.setString(2, middleName);
@@ -164,6 +170,8 @@ public class EditProfileServlet extends HttpServlet {
             stmtEmployee.setDate(42, finalPayReleaseDate != null ? java.sql.Date.valueOf(finalPayReleaseDate) : null);
             stmtEmployee.setInt(43, id);
 
+
+
             int affectedRows = stmtEmployee.executeUpdate();
             if (affectedRows == 0) {
                 throw new SQLException("Updating employee failed, no rows affected.");
@@ -177,6 +185,20 @@ public class EditProfileServlet extends HttpServlet {
                 stmtFile.executeUpdate();
             }
 
+            for (Part filePart : request.getParts()) {
+                if ("file".equals(filePart.getName()) && filePart.getSize() > 0) {
+                    String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+                    String fileType = filePart.getContentType();
+                    InputStream fileContent = filePart.getInputStream();
+
+                    stmtFile.setInt(1, id);
+                    stmtFile.setString(2, fileName);
+                    stmtFile.setString(3, fileType);
+                    stmtFile.setBinaryStream(4, fileContent);
+                    stmtFile.executeUpdate();
+                }
+            }
+
             // Redirect to dashboard or display success message
             response.sendRedirect(request.getContextPath() + "/dashboard.jsp");
 
@@ -187,8 +209,9 @@ public class EditProfileServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Handle the GET request if needed
+        // handle the GET request if needed
     }
+
 
     private LocalDate parseDate(String dateString) {
         if (dateString != null && !dateString.isEmpty()) {

@@ -5,20 +5,38 @@
     <style>
         body {
             text-align: center;
-            margin: 20% auto;
+            margin: 10% auto 0;
+            color: black;
+            background-color: white;
         }
         form {
             display: inline-block;
             text-align: center;
+            border: 2px solid black;
+            padding: 20px;
         }
 
         label, input[type="text"], input[type="password"] {
-            display: inline-block;
-            margin: 5px;
+            display: block;
+            margin: 10px 0;
         }
+
         input[type="submit"] {
             display: block;
-            margin: 10px auto;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: black;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: gray;
+        }
+
+        p {
+            color: red;
         }
     </style>
 </head>
@@ -34,7 +52,7 @@
 
     <input type="submit" value="Login">
     <c:if test="${not empty errorMessage}">
-        <p style="color: red;">${errorMessage}</p>
+        <p>${errorMessage}</p>
     </c:if>
 </form>
 </body>
