@@ -20,9 +20,9 @@
 </head>
 <body>
 <h1>Employees Dashboard</h1>
-<hr style="border-top: 4px solid black;"> <br>
-<button onclick="window.location.href='createProfile.jsp'">Create Profile</button>
+<hr style="border-top: 4px solid black;">
 <button onclick="window.location.href='login.jsp'">Log Out</button>
+<button onclick="window.location.href='createProfile.jsp'">Create Profile</button>
 <table>
   <tr>
     <th>First Name</th>
@@ -40,7 +40,6 @@
     <td><%= employee.getJobPosition() %></td>
     <td><%= employee.getDateHired() %></td>
     <td><a href="viewProfile?employeeId=<%= employee.getId() %>">View</a></td>
-
   </tr>
   <% } %>
 </table>

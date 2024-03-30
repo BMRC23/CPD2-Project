@@ -38,13 +38,12 @@
 </head>
 <body>
 
+<h1>Create Profile</h1>
+<hr style="border-top: 4px solid black;">
 <!--Back Button-->
 <div class="button-container">
   <button onclick="window.location.href='dashboard.jsp'">Back to Dashboard</button>
 </div>
-
-<h1>Create Profile</h1>
-<hr style="border-top: 4px solid black;">
 <form action="createProfile" method="post" enctype="multipart/form-data">
   <!-- EMPLOYEE DETAILS -->
   <h2>EMPLOYEE DETAILS</h2>
@@ -113,8 +112,9 @@
     function enableEditing(checkbox, dateId, remarksId) {
       var dateField = document.getElementById(dateId);
       var remarksField = document.getElementById(remarksId);
+      var booleanValue = checkbox.checked;
 
-      if (checkbox.checked) {
+      if (booleanValue) {
         dateField.disabled = false;
         remarksField.disabled = false;
       } else {
@@ -123,8 +123,13 @@
         dateField.value = ''; // Clear the date field
         remarksField.value = ''; // Clear the remarks field
       }
+
+      // Set the corresponding boolean value
+      var booleanField = document.getElementById(checkbox.getAttribute('data-boolean-field'));
+      booleanField.value = booleanValue;
     }
   </script>
+
 
   <!-- ONBOARDING CHECKLIST -->
   <h2>ONBOARDING CHECKLIST</h2>
@@ -139,87 +144,131 @@
       <td style="text-align: center;">Employee Contract</td>
       <td style="text-align: center;"><label for="employeeContractDateCompleted"></label><input type="date" id="employeeContractDateCompleted" name="employeeContractDateCompleted" disabled></td>
       <td style="text-align: center;"><label for="employeeContractRemarks"></label><input type="text" id="employeeContractRemarks" name="employeeContractRemarks" disabled></td>
-      <td><label for="employeeContract"></label><input type="checkbox" id="employeeContract" onclick="enableEditing(this, 'employeeContractDateCompleted', 'employeeContractRemarks')"></td>
+      <td>
+        <label for="employeeContract"></label>
+        <input type="checkbox" id="employeeContract" data-boolean-field="employeeContractBoolean" onclick="enableEditing(this, 'employeeContractDateCompleted', 'employeeContractRemarks')">
+        <input type="hidden" id="employeeContractBoolean" name="employeeContractBoolean" value="false">
+      </td>
     </tr>
     <tr>
       <td style="text-align: center;">Microsoft Account / Email Address</td>
       <td style="text-align: center;"><label for="microsoftAccountDateCompleted"></label><input type="date" id="microsoftAccountDateCompleted" name="microsoftAccountDateCompleted" disabled></td>
       <td style="text-align: center;"><label for="microsoftAccountRemarks"></label><input type="text" id="microsoftAccountRemarks" name="microsoftAccountRemarks" disabled></td>
-      <td><label for="microsoftAccount"></label><input type="checkbox" id="microsoftAccount" onchange="enableEditing(this, 'microsoftAccountDateCompleted', 'microsoftAccountRemarks')"></td>
+      <td>
+        <label for="microsoftAccount"></label>
+        <input type="checkbox" id="microsoftAccount" data-boolean-field="microsoftAccountBoolean" onclick="enableEditing(this, 'microsoftAccountDateCompleted', 'microsoftAccountRemarks')">
+        <input type="hidden" id="microsoftAccountBoolean" name="microsoftAccountBoolean" value="false">
+      </td>
     </tr>
     <tr>
       <td style="text-align: center;">Issued Assets</td>
       <td style="text-align: center;"><label for="issuedAssetsDateCompleted"></label><input type="date" id="issuedAssetsDateCompleted" name="issuedAssetsDateCompleted" disabled></td>
       <td style="text-align: center;"><label for="issuedAssetsRemarks"></label><input type="text" id="issuedAssetsRemarks" name="issuedAssetsRemarks" disabled></td>
-      <td><label for="issuedAssets"></label><input type="checkbox" id="issuedAssets" onchange="enableEditing(this, 'issuedAssetsDateCompleted', 'issuedAssetsRemarks')"></td>
+      <td>
+        <label for="issuedAssets"></label>
+        <input type="checkbox" id="issuedAssets" data-boolean-field="issuedAssetsBoolean" onclick="enableEditing(this, 'issuedAssetsDateCompleted', 'issuedAssetsRemarks')">
+        <input type="hidden" id="issuedAssetsBoolean" name="issuedAssetsBoolean" value="false">
+      </td>
     </tr>
     <tr>
       <td style="text-align: center;">Required Licenses</td>
       <td style="text-align: center;"><label for="requiredLicensesDateCompleted"></label><input type="date" id="requiredLicensesDateCompleted" name="requiredLicensesDateCompleted" disabled></td>
       <td style="text-align: center;"><label for="requiredLicensesRemarks"></label><input type="text" id="requiredLicensesRemarks" name="requiredLicensesRemarks" disabled></td>
-      <td><label for="requiredLicenses"></label><input type="checkbox" id="requiredLicenses" onchange="enableEditing(this, 'requiredLicensesDateCompleted', 'requiredLicensesRemarks')"></td>
+      <td>
+        <label for="requiredLicenses"></label>
+        <input type="checkbox" id="requiredLicenses" data-boolean-field="requiredLicensesBoolean" onclick="enableEditing(this, 'requiredLicensesDateCompleted', 'requiredLicensesRemarks')">
+        <input type="hidden" id="requiredLicensesBoolean" name="requiredLicensesBoolean" value="false">
+      </td>
     </tr>
     <tr>
       <td style="text-align: center;">Trello Invite</td>
       <td style="text-align: center;"><label for="trelloInviteDateCompleted"></label><input type="date" id="trelloInviteDateCompleted" name="trelloInviteDateCompleted" disabled></td>
       <td style="text-align: center;"><label for="trelloInviteRemarks"></label><input type="text" id="trelloInviteRemarks" name="trelloInviteRemarks" disabled></td>
-      <td><label for="trelloInvite"></label><input type="checkbox" id="trelloInvite" onchange="enableEditing(this, 'trelloInviteDateCompleted', 'trelloInviteRemarks')"></td>
+      <td>
+        <label for="trelloInvite"></label>
+        <input type="checkbox" id="trelloInvite" data-boolean-field="trelloInviteBoolean" onclick="enableEditing(this, 'trelloInviteDateCompleted', 'trelloInviteRemarks')">
+        <input type="hidden" id="trelloInviteBoolean" name="trelloInviteBoolean" value="false">
+      </td>
     </tr>
     <tr>
       <td style="text-align: center;">Teams/Shifts</td>
       <td style="text-align: center;"><label for="teamsShiftsDateCompleted"></label><input type="date" id="teamsShiftsDateCompleted" name="teamsShiftsDateCompleted" disabled></td>
       <td style="text-align: center;"><label for="teamsShiftsRemarks"></label><input type="text" id="teamsShiftsRemarks" name="teamsShiftsRemarks" disabled></td>
-      <td><label for="teamsShifts"></label><input type="checkbox" id="teamsShifts" onchange="enableEditing(this, 'teamsShiftsDateCompleted', 'teamsShiftsRemarks')"></td>
+      <td>
+        <label for="teamsShifts"></label>
+        <input type="checkbox" id="teamsShifts" data-boolean-field="teamsShiftsBoolean" onclick="enableEditing(this, 'teamsShiftsDateCompleted', 'teamsShiftsRemarks')">
+        <input type="hidden" id="teamsShiftsBoolean" name="teamsShiftsBoolean" value="false">
+      </td>
     </tr>
     <tr>
       <td style="text-align: center;">Enrol to Payroll</td>
       <td style="text-align: center;"><label for="enrolToPayrollDateCompleted"></label><input type="date" id="enrolToPayrollDateCompleted" name="enrolToPayrollDateCompleted" disabled></td>
       <td style="text-align: center;"><label for="enrolToPayrollRemarks"></label><input type="text" id="enrolToPayrollRemarks" name="enrolToPayrollRemarks" disabled></td>
-      <td><label for="enrolToPayroll"></label><input type="checkbox" id="enrolToPayroll" onchange="enableEditing(this, 'enrolToPayrollDateCompleted', 'enrolToPayrollRemarks')"></td>
+      <td>
+        <label for="enrolToPayroll"></label>
+        <input type="checkbox" id="enrolToPayroll" data-boolean-field="enrolToPayrollBoolean" onclick="enableEditing(this, 'enrolToPayrollDateCompleted', 'enrolToPayrollRemarks')">
+        <input type="hidden" id="enrolToPayrollBoolean" name="enrolToPayrollBoolean" value="false">
+      </td>
     </tr>
+
   </table>
   <br>
   <br>
   <hr style="border-top: 2px solid black;">
 
+
   <!-- OFFBOARDING CHECKLIST -->
   <h2>OFFBOARDING CHECKLIST</h2>
   <table border="1">
     <tr>
-      <th>Checklist Item</th>
-      <th>Date Completed</th>
-      <th>Remarks</th>
-      <th>Check</th>
-    </tr>
-    <tr>
       <td style="text-align: center;">Certificate of Employment</td>
       <td style="text-align: center;"><label for="certificateEmploymentDateCompleted"></label><input type="date" id="certificateEmploymentDateCompleted" name="certificateEmploymentDateCompleted" disabled></td>
       <td style="text-align: center;"><label for="certificateEmploymentRemarks"></label><input type="text" id="certificateEmploymentRemarks" name="certificateEmploymentRemarks" disabled></td>
-      <td><label for="certificateEmployment"></label><input type="checkbox" id="certificateEmployment" onchange="enableEditing(this, 'certificateEmploymentDateCompleted', 'certificateEmploymentRemarks')"></td>
+      <td>
+        <label for="certificateEmployment"></label>
+        <input type="checkbox" id="certificateEmployment" data-boolean-field="certificateEmploymentBoolean" onclick="enableEditing(this, 'certificateEmploymentDateCompleted', 'certificateEmploymentRemarks')">
+        <input type="hidden" id="certificateEmploymentBoolean" name="certificateEmploymentBoolean" value="false">
+      </td>
     </tr>
     <tr>
       <td style="text-align: center;">BIR Form 2316</td>
       <td style="text-align: center;"><label for="birForm2316DateCompleted"></label><input type="date" id="birForm2316DateCompleted" name="birForm2316DateCompleted" disabled></td>
       <td style="text-align: center;"><label for="birForm2316Remarks"></label><input type="text" id="birForm2316Remarks" name="birForm2316Remarks" disabled></td>
-      <td><label for="birForm2316"></label><input type="checkbox" id="birForm2316" onchange="enableEditing(this, 'birForm2316DateCompleted', 'birForm2316Remarks')"></td>
+      <td>
+        <label for="birForm2316"></label>
+        <input type="checkbox" id="birForm2316" data-boolean-field="birForm2316Boolean" onclick="enableEditing(this, 'birForm2316DateCompleted', 'birForm2316Remarks')">
+        <input type="hidden" id="birForm2316Boolean" name="birForm2316Boolean" value="false">
+      </td>
     </tr>
     <tr>
       <td style="text-align: center;">Return of Issued Assets</td>
       <td style="text-align: center;"><label for="returnIssuedAssetsDateCompleted"></label><input type="date" id="returnIssuedAssetsDateCompleted" name="returnIssuedAssetsDateCompleted" disabled></td>
       <td style="text-align: center;"><label for="returnIssuedAssetsRemarks"></label><input type="text" id="returnIssuedAssetsRemarks" name="returnIssuedAssetsRemarks" disabled></td>
-      <td><label for="returnIssuedAssets"></label><input type="checkbox" id="returnIssuedAssets" onchange="enableEditing(this, 'returnIssuedAssetsDateCompleted', 'returnIssuedAssetsRemarks')"></td>
+      <td>
+        <label for="returnIssuedAssets"></label>
+        <input type="checkbox" id="returnIssuedAssets" data-boolean-field="returnIssuedAssetsBoolean" onclick="enableEditing(this, 'returnIssuedAssetsDateCompleted', 'returnIssuedAssetsRemarks')">
+        <input type="hidden" id="returnIssuedAssetsBoolean" name="returnIssuedAssetsBoolean" value="false">
+      </td>
     </tr>
     <tr>
       <td style="text-align: center;">Quitclaim + Final Pay</td>
       <td style="text-align: center;"><label for="quitclaimFinalPayDateCompleted"></label><input type="date" id="quitclaimFinalPayDateCompleted" name="quitclaimFinalPayDateCompleted" disabled></td>
       <td style="text-align: center;"><label for="quitclaimFinalPayRemarks"></label><input type="text" id="quitclaimFinalPayRemarks" name="quitclaimFinalPayRemarks" disabled></td>
-      <td><label for="quitclaimFinalPay"></label><input type="checkbox" id="quitclaimFinalPay" onchange="enableEditing(this, 'quitclaimFinalPayDateCompleted', 'quitclaimFinalPayRemarks')"></td>
+      <td>
+        <label for="quitclaimFinalPay"></label>
+        <input type="checkbox" id="quitclaimFinalPay" data-boolean-field="quitclaimFinalPayBoolean" onclick="enableEditing(this, 'quitclaimFinalPayDateCompleted', 'quitclaimFinalPayRemarks')">
+        <input type="hidden" id="quitclaimFinalPayBoolean" name="quitclaimFinalPayBoolean" value="false">
+      </td>
     </tr>
     <tr>
       <td style="text-align: center;">Knowledge Transfer Sheet</td>
       <td style="text-align: center;"><label for="knowledgeTransferSheetDateCompleted"></label><input type="date" id="knowledgeTransferSheetDateCompleted" name="knowledgeTransferSheetDateCompleted" disabled></td>
       <td style="text-align: center;"><label for="knowledgeTransferSheetRemarks"></label><input type="text" id="knowledgeTransferSheetRemarks" name="knowledgeTransferSheetRemarks" disabled></td>
-      <td><label for="knowledgeTransferSheet"></label><input type="checkbox" id="knowledgeTransferSheet" onchange="enableEditing(this, 'knowledgeTransferSheetDateCompleted', 'knowledgeTransferSheetRemarks')"></td>
+      <td>
+        <label for="knowledgeTransferSheet"></label>
+        <input type="checkbox" id="knowledgeTransferSheet" data-boolean-field="knowledgeTransferSheetBoolean" onclick="enableEditing(this, 'knowledgeTransferSheetDateCompleted', 'knowledgeTransferSheetRemarks')">
+        <input type="hidden" id="knowledgeTransferSheetBoolean" name="knowledgeTransferSheetBoolean" value="false">
+      </td>
     </tr>
   </table>
   <br>

@@ -22,10 +22,6 @@ public class DownloadFileServlet extends HttpServlet {
 
         int fileId = Integer.parseInt(request.getParameter("fileId"));
 
-
-
-        
-
         String url = "jdbc:mysql://localhost:3306/employeelist";
         String username = "root";
         String password = "LBYCPD2project";

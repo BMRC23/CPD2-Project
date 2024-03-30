@@ -58,23 +58,35 @@ public class CreateProfileServlet extends HttpServlet {
         LocalDate finalPayReleaseDate = parseDate(request.getParameter("finalPayReleaseDate"));
 
         // Onboarding Checklist parameters
+        boolean employeeContract = Boolean.parseBoolean(request.getParameter("employeeContract"));
         String employeeContractRemarks = request.getParameter("employeeContractRemarks");
+        boolean microsoftAccount = Boolean.parseBoolean(request.getParameter("microsoftAccount"));
         String microsoftAccountRemarks = request.getParameter("microsoftAccountRemarks");
+        boolean issuedAssets = Boolean.parseBoolean(request.getParameter("issuedAssets"));
         String issuedAssetsRemarks = request.getParameter("issuedAssetsRemarks");
+        boolean requiredLicenses = Boolean.parseBoolean(request.getParameter("requiredLicenses"));
         String requiredLicensesRemarks = request.getParameter("requiredLicensesRemarks");
+        boolean trelloInvite = Boolean.parseBoolean(request.getParameter("trelloInvite"));
         String trelloInviteRemarks = request.getParameter("trelloInviteRemarks");
+        boolean teamsShifts = Boolean.parseBoolean(request.getParameter("teamsShifts"));
         String teamsShiftsRemarks = request.getParameter("teamsShiftsRemarks");
+        boolean enrolToPayroll = Boolean.parseBoolean(request.getParameter("enrolToPayroll"));
         String enrolToPayrollRemarks = request.getParameter("enrolToPayrollRemarks");
 
         // Offboarding Checklist parameters
+        boolean certificateEmployment = Boolean.parseBoolean(request.getParameter("certificateEmployment"));
         String certificateEmploymentRemarks = request.getParameter("certificateEmploymentRemarks");
+        boolean birForm2316 = Boolean.parseBoolean(request.getParameter("birForm2316"));
         String birForm2316Remarks = request.getParameter("birForm2316Remarks");
+        boolean returnIssuedAssets = Boolean.parseBoolean(request.getParameter("returnIssuedAssets"));
         String returnIssuedAssetsRemarks = request.getParameter("returnIssuedAssetsRemarks");
+        boolean quitclaimFinalPay = Boolean.parseBoolean(request.getParameter("quitclaimFinalPay"));
         String quitclaimFinalPayRemarks = request.getParameter("quitclaimFinalPayRemarks");
+        boolean knowledgeTransferSheet = Boolean.parseBoolean(request.getParameter("knowledgeTransferSheet"));
         String knowledgeTransferSheetRemarks = request.getParameter("knowledgeTransferSheetRemarks");
 
         // Resignation parameters
-        Boolean resigned = Boolean.valueOf(request.getParameter("resigned"));
+        boolean resigned = Boolean.parseBoolean(request.getParameter("resigned"));
 
         // Handle file uploads
         List<String> fileNames = new ArrayList<>();
@@ -101,8 +113,9 @@ public class CreateProfileServlet extends HttpServlet {
         String sqlEmployee = "INSERT INTO employee (firstName, middleName, lastName, jobPosition, dateHired, address, contactNumber, birthdate, sss, tin, philHealth, pagIbig, emergencyContactName, emergencyContactNumber, employeeContractDateCompleted, " +
                 "employeeContractRemarks, microsoftAccountDateCompleted, microsoftAccountRemarks, issuedAssetsDateCompleted, issuedAssetsRemarks, requiredLicensesDateCompleted, requiredLicensesRemarks, trelloInviteDateCompleted, trelloInviteRemarks, " +
                 "teamsShiftsDateCompleted, teamsShiftsRemarks, enrolToPayrollDateCompleted, enrolToPayrollRemarks, certificateEmploymentDateCompleted, certificateEmploymentRemarks, birForm2316DateCompleted, birForm2316Remarks, returnIssuedAssetsDateCompleted, " +
-                "returnIssuedAssetsRemarks, quitclaimFinalPayDateCompleted, quitclaimFinalPayRemarks, knowledgeTransferSheetDateCompleted, knowledgeTransferSheetRemarks, resigned, resignationDate, lastDay, finalPayReleaseDate) " + // Add the name of the missing column here
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "returnIssuedAssetsRemarks, quitclaimFinalPayDateCompleted, quitclaimFinalPayRemarks, knowledgeTransferSheetDateCompleted, knowledgeTransferSheetRemarks, resigned, resignationDate, lastDay, finalPayReleaseDate, employeeContract, microsoftAccount" +
+                "issuedAssets, requiredLicenses, trelloInvite, teamsShifts, enrolToPayroll, certificateEmployment, birForm2316, returnIssuedAssets, quitClaimFinalPay, knowledgeTrasnferSheet) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String sqlFile = "INSERT INTO EmployeeFiles (employee_id, filename, filetype, filedata) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = DriverManager.getConnection(url, username, password);
@@ -152,6 +165,18 @@ public class CreateProfileServlet extends HttpServlet {
             stmtEmployee.setDate(40, resignationDate != null ? java.sql.Date.valueOf(resignationDate) : null);
             stmtEmployee.setDate(41, lastDay != null ? java.sql.Date.valueOf(lastDay) : null);
             stmtEmployee.setDate(42, finalPayReleaseDate != null ? java.sql.Date.valueOf(finalPayReleaseDate) : null);
+            stmtEmployee.setBoolean(43, employeeContract);
+            stmtEmployee.setBoolean(44, microsoftAccount);
+            stmtEmployee.setBoolean(45, issuedAssets);
+            stmtEmployee.setBoolean(46, requiredLicenses);
+            stmtEmployee.setBoolean(47, trelloInvite);
+            stmtEmployee.setBoolean(48, teamsShifts);
+            stmtEmployee.setBoolean(49, enrolToPayroll);
+            stmtEmployee.setBoolean(50, certificateEmployment);
+            stmtEmployee.setBoolean(51, birForm2316);
+            stmtEmployee.setBoolean(52, returnIssuedAssets);
+            stmtEmployee.setBoolean(53, quitclaimFinalPay);
+            stmtEmployee.setBoolean(54, knowledgeTransferSheet);
 
 
             int affectedRows = stmtEmployee.executeUpdate();
