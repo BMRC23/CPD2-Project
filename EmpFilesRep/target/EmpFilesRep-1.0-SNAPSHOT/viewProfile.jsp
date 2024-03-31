@@ -13,7 +13,7 @@
 
 <html>
 <head>
-    <title>View Profile</title>
+    <title>Create Profile</title>
     <style>
         /* Center align the form */
         form {
@@ -36,31 +36,45 @@
             margin-bottom: 10px;
             font-size: 14px; /* Adjust font size */
         }
-        table {
-            width: 100%;
-        }
         .button-container {
             text-align: left;
             margin-bottom: 10px;
         }
+        .button-container-left {
+            float: left;
+        }
+        .button-container-right {
+            float: right;
+        }
         .button-container button {
             margin-right: 10px;
         }
+        table {
+            width: 100%;
+        }
     </style>
 </head>
-
 <body>
+
 <h1>View Profile</h1>
 <hr style="border-top: 4px solid black;">
-<div class="button-container">
+
+<!-- Button container for Back to Dashboard, Toggle Editing, and Delete Profile-->
+<div class="button-container button-container-left">
     <button onclick="window.location.href='dashboard.jsp'">Back to Dashboard</button>
-    <button type="button" onclick="toggleAllFields()">Toggle Editing</button>
+    <button type="button" id="toggleEditing" name="toggleEditing" onclick="toggleAllFields()">Toggle Editing</button>
     <button type="button" onclick="deleteProfile()">Delete Profile</button>
+</div>
+
+<!-- Button container for Log Out -->
+<div class="button-container button-container-right">
+    <button class="logout-button" onclick="confirmLogout()">Log Out</button>
 </div>
 
 <form id="deleteProfileForm" action="deleteProfile" method="post">
     <input type="hidden" id="employeeId" name="employeeId" value="<%= employee.getId() %>">
 </form>
+
 
 <script>
     function deleteProfile() {
@@ -78,7 +92,7 @@
     }
 </script>
 
-<form action="editProfile" method="post" enctype="multipart/form-data">
+<form action="editProfile" method="post" enctype="multipart/form-data" id="editProfileForm" onsubmit="handleSubmit()">
     <!-- EMPLOYEE DETAILS -->
     <h2>EMPLOYEE DETAILS</h2>
     <!-- First Name -->
@@ -140,6 +154,28 @@
     <br>
     <hr style="border-top: 2px solid black;">
 
+    <!-- Script to enable editing of columns when checkbox is checked -->
+    <script>
+        function enableEditing(checkbox, dateId, remarksId) {
+            let dateField = document.getElementById(dateId);
+            let remarksField = document.getElementById(remarksId);
+            let booleanValue = checkbox.checked;
+
+            if (booleanValue) {
+                dateField.disabled = false;
+                remarksField.disabled = false;
+            } else {
+                dateField.disabled = true;
+                remarksField.disabled = true;
+                dateField.value = ''; // Clear the date field
+                remarksField.value = ''; // Clear the remarks field
+            }
+
+            // Set the corresponding boolean value
+            document.getElementById(checkbox.id).value = booleanValue.toString(); // Set boolean value as string
+        }
+    </script>
+
     <!-- ONBOARDING CHECKLIST -->
     <h2>ONBOARDING CHECKLIST</h2>
     <!-- Table for Onboarding Checklist -->
@@ -156,43 +192,43 @@
             <td style="text-align: center;">Employee Contract</td>
             <td style="text-align: center;"><label for="employeeContractDateCompleted"></label><input type="date" id="employeeContractDateCompleted" name="employeeContractDateCompleted" value="<%= employee.getEmployeeContractDateCompleted() %>" disabled></td>
             <td style="text-align: center;"><label for="employeeContractRemarks"></label><input type="text" id="employeeContractRemarks" name="employeeContractRemarks" value="<%= employee.getEmployeeContractRemarks() != null ? employee.getEmployeeContractRemarks() : "" %>" disabled></td>
-            <td style="text-align: center;"><label for="employeeContract"></label><input type="checkbox" id="employeeContract" data-id="date remarks" data-date-id="employeeContractDateCompleted" data-remarks-id="employeeContractRemarks" onchange="toggleDateCompletedAndRemarksFields()" <% if (employee.isEmployeeContract()) { %> checked <% } %> disabled></td>
+            <td style="text-align: center;"><label for="employeeContract"></label><input type="checkbox" id="employeeContract" name="employeeContract" data-id="date remarks" data-date-id="employeeContractDateCompleted" data-remarks-id="employeeContractRemarks" onclick="enableEditing(this, 'employeeContractDateCompleted', 'employeeContractRemarks')" <% if (employee.isEmployeeContract()) { %> checked <% } %> disabled></td>
         </tr>
         <tr>
             <td style="text-align: center;">Microsoft Account / Email Address</td>
             <td style="text-align: center;"><label for="microsoftAccountDateCompleted"></label><input type="date" id="microsoftAccountDateCompleted" name="microsoftAccountDateCompleted" value="<%= employee.getMicrosoftAccountDateCompleted() %>" disabled></td>
             <td style="text-align: center;"><label for="microsoftAccountRemarks"></label><input type="text" id="microsoftAccountRemarks" name="microsoftAccountRemarks" value="<%= employee.getMicrosoftAccountRemarks() != null ? employee.getMicrosoftAccountRemarks() : "" %>" disabled></td>
-            <td style="text-align: center;"><label for="microsoftAccount"></label><input type="checkbox" id="microsoftAccount" data-id="date remarks" data-date-id="microsoftAccountDateCompleted" data-remarks-id="microsoftAccountRemarks" onchange="toggleDateCompletedAndRemarksFields()" <% if (employee.isMicrosoftAccount()) { %> checked <% } %> disabled></td>
+            <td style="text-align: center;"><label for="microsoftAccount"></label><input type="checkbox" id="microsoftAccount" name="microsoftAccount" data-id="date remarks" data-date-id="microsoftAccountDateCompleted" data-remarks-id="microsoftAccountRemarks" onclick="enableEditing(this, 'microsoftAccountDateCompleted', 'microsoftAccountRemarks')" <% if (employee.isMicrosoftAccount()) { %> checked <% } %> disabled></td>
         </tr>
         <tr>
             <td style="text-align: center;">Issued Assets</td>
             <td style="text-align: center;"><label for="issuedAssetsDateCompleted"></label><input type="date" id="issuedAssetsDateCompleted" name="issuedAssetsDateCompleted" value="<%= employee.getIssuedAssetsDateCompleted() %>" disabled></td>
             <td style="text-align: center;"><label for="issuedAssetsRemarks"></label><input type="text" id="issuedAssetsRemarks" name="issuedAssetsRemarks" value="<%= employee.getIssuedAssetsRemarks() != null ? employee.getIssuedAssetsRemarks() : "" %>" disabled></td>
-            <td style="text-align: center;"><label for="issuedAssets"></label><input type="checkbox" id="issuedAssets" data-id="date remarks" data-date-id="issuedAssetsDateCompleted" data-remarks-id="issuedAssetsRemarks" onchange="toggleDateCompletedAndRemarksFields()" <% if (employee.isIssuedAssets()) { %> checked <% } %> disabled></td>
+            <td style="text-align: center;"><label for="issuedAssets"></label><input type="checkbox" id="issuedAssets" name="issuedAssets" data-id="date remarks" data-date-id="issuedAssetsDateCompleted" data-remarks-id="issuedAssetsRemarks" onclick="enableEditing(this, 'issuedAssetsDateCompleted', 'issuedAssetsRemarks')" <% if (employee.isIssuedAssets()) { %> checked <% } %> disabled></td>
         </tr>
         <tr>
             <td style="text-align: center;">Required Licenses</td>
             <td style="text-align: center;"><label for="requiredLicensesDateCompleted"></label><input type="date" id="requiredLicensesDateCompleted" name="requiredLicensesDateCompleted" value="<%= employee.getRequiredLicensesDateCompleted() %>" disabled></td>
             <td style="text-align: center;"><label for="requiredLicensesRemarks"></label><input type="text" id="requiredLicensesRemarks" name="requiredLicensesRemarks" value="<%= employee.getRequiredLicensesRemarks() != null ? employee.getRequiredLicensesRemarks() : "" %>" disabled></td>
-            <td style="text-align: center;"><label for="requiredLicenses"></label><input type="checkbox" id="requiredLicenses" data-id="date remarks" data-date-id="requiredLicensesDateCompleted" data-remarks-id="requiredLicensesRemarks" onchange="toggleDateCompletedAndRemarksFields()" <% if (employee.isRequiredLicenses()) { %> checked <% } %> disabled></td>
+            <td style="text-align: center;"><label for="requiredLicenses"></label><input type="checkbox" id="requiredLicenses" name="requiredLicenses" data-id="date remarks" data-date-id="requiredLicensesDateCompleted" data-remarks-id="requiredLicensesRemarks" onclick="enableEditing(this, 'requiredLicensesDateCompleted', 'requiredLicensesRemarks')" <% if (employee.isRequiredLicenses()) { %> checked <% } %> disabled></td>
         </tr>
         <tr>
             <td style="text-align: center;">Trello Invite</td>
             <td style="text-align: center;"><label for="trelloInviteDateCompleted"></label><input type="date" id="trelloInviteDateCompleted" name="trelloInviteDateCompleted" value="<%= employee.getTrelloInviteDateCompleted() %>" disabled></td>
             <td style="text-align: center;"><label for="trelloInviteRemarks"></label><input type="text" id="trelloInviteRemarks" name="trelloInviteRemarks" value="<%= employee.getTrelloInviteRemarks() != null ? employee.getTrelloInviteRemarks() : "" %>" disabled></td>
-            <td style="text-align: center;"><label for="trelloInvite"></label><input type="checkbox" id="trelloInvite" data-id="date remarks" data-date-id="trelloInviteDateCompleted" data-remarks-id="trelloInviteRemarks" onchange="toggleDateCompletedAndRemarksFields()" <% if (employee.isTrelloInvite()) { %> checked <% } %> disabled></td>
+            <td style="text-align: center;"><label for="trelloInvite"></label><input type="checkbox" id="trelloInvite" name="trelloInvite" data-id="date remarks" data-date-id="trelloInviteDateCompleted" data-remarks-id="trelloInviteRemarks" onclick="enableEditing(this, 'trelloInviteDateCompleted', 'trelloInviteRemarks')" <% if (employee.isTrelloInvite()) { %> checked <% } %> disabled></td>
         </tr>
         <tr>
             <td style="text-align: center;">Teams/Shifts</td>
             <td style="text-align: center;"><label for="teamsShiftsDateCompleted"></label><input type="date" id="teamsShiftsDateCompleted" name="teamsShiftsDateCompleted" value="<%= employee.getTeamsShiftsDateCompleted() %>" disabled></td>
             <td style="text-align: center;"><label for="teamsShiftsRemarks"></label><input type="text" id="teamsShiftsRemarks" name="teamsShiftsRemarks" value="<%= employee.getTeamsShiftsRemarks() != null ? employee.getTeamsShiftsRemarks() : "" %>" disabled></td>
-            <td style="text-align: center;"><label for="teamsShifts"></label><input type="checkbox" id="teamsShifts" data-id="date remarks" data-date-id="teamsShiftsDateCompleted" data-remarks-id="teamsShiftsRemarks" onchange="toggleDateCompletedAndRemarksFields()" <% if (employee.isTeamsShifts()) { %> checked <% } %> disabled></td>
+            <td style="text-align: center;"><label for="teamsShifts"></label><input type="checkbox" id="teamsShifts" name="teamsShifts" data-id="date remarks" data-date-id="teamsShiftsDateCompleted" data-remarks-id="teamsShiftsRemarks" onclick="enableEditing(this, 'teamsShiftsDateCompleted', 'teamsShiftsRemarks')" <% if (employee.isTeamsShifts()) { %> checked <% } %> disabled></td>
         </tr>
         <tr>
             <td style="text-align: center;">Enrol to Payroll</td>
             <td style="text-align: center;"><label for="enrolToPayrollDateCompleted"></label><input type="date" id="enrolToPayrollDateCompleted" name="enrolToPayrollDateCompleted" value="<%= employee.getEnrolToPayrollDateCompleted() %>" disabled></td>
             <td style="text-align: center;"><label for="enrolToPayrollRemarks"></label><input type="text" id="enrolToPayrollRemarks" name="enrolToPayrollRemarks" value="<%= employee.getEnrolToPayrollRemarks() != null ? employee.getEnrolToPayrollRemarks() : ""  %>" disabled></td>
-            <td style="text-align: center;"><label for="enrolToPayroll"></label><input type="checkbox" id="enrolToPayroll" data-id="date remarks" data-date-id="enrolToPayrollDateCompleted" data-remarks-id="enrolToPayrollRemarks" onchange="toggleDateCompletedAndRemarksFields()" <% if (employee.isEnrolToPayroll()) { %> checked <% } %> disabled></td>
+            <td style="text-align: center;"><label for="enrolToPayroll"></label><input type="checkbox" id="enrolToPayroll" name="enrolToPayroll" data-id="date remarks" data-date-id="enrolToPayrollDateCompleted" data-remarks-id="enrolToPayrollRemarks" onclick="enableEditing(this, 'enrolToPayrollDateCompleted', 'enrolToPayrollRemarks')" <% if (employee.isEnrolToPayroll()) { %> checked <% } %> disabled></td>
         </tr>
     </table>
     <br>
@@ -218,7 +254,7 @@
             <td style="text-align: center;"><label for="certificateEmploymentRemarks"></label><input type="text" id="certificateEmploymentRemarks" name="certificateEmploymentRemarks" value="<%= employee.getCertificateEmploymentRemarks() != null ? employee.getCertificateEmploymentRemarks() : ""  %>" disabled></td>
             <td style="text-align: center;">
                 <label for="certificateEmployment"></label>
-                <input type="checkbox" id="certificateEmployment" data-id="date remarks" data-date-id="certificateEmploymentDateCompleted" data-remarks-id="certificateEmploymentRemarks" onchange="toggleDateCompletedAndRemarksFields()" <% if (employee.isCertificateEmployment()) { %> checked <% } %> disabled>
+                <input type="checkbox" id="certificateEmployment" name="certificateEmployment" data-id="date remarks" data-date-id="certificateEmploymentDateCompleted" data-remarks-id="certificateEmploymentRemarks" onclick="enableEditing(this, 'certificateEmploymentDateCompleted', 'certificateEmploymentRemarks')" <% if (employee.isCertificateEmployment()) { %> checked <% } %> disabled>
             </td>
         </tr>
         <tr>
@@ -227,7 +263,7 @@
             <td style="text-align: center;"><label for="birForm2316Remarks"></label><input type="text" id="birForm2316Remarks" name="birForm2316Remarks" value="<%= employee.getBirForm2316Remarks() != null ? employee.getBirForm2316Remarks() : "" %>" disabled></td>
             <td style="text-align: center;">
                 <label for="birForm2316"></label>
-                <input type="checkbox" id="birForm2316" data-id="date remarks" data-date-id="birForm2316DateCompleted" data-remarks-id="birForm2316Remarks" onchange="toggleDateCompletedAndRemarksFields()" <% if (employee.isBirForm2316()) { %> checked <% } %> disabled>
+                <input type="checkbox" id="birForm2316" name="birForm2316" data-id="date remarks" data-date-id="birForm2316DateCompleted" data-remarks-id="birForm2316Remarks" onclick="enableEditing(this, 'birForm2316DateCompleted', 'birForm2316Remarks')" <% if (employee.isBirForm2316()) { %> checked <% } %> disabled>
             </td>
         </tr>
         <tr>
@@ -236,7 +272,7 @@
             <td style="text-align: center;"><label for="returnIssuedAssetsRemarks"></label><input type="text" id="returnIssuedAssetsRemarks" name="returnIssuedAssetsRemarks" value="<%= employee.getReturnIssuedAssetsRemarks() != null ? employee.getReturnIssuedAssetsRemarks() : "" %>" disabled></td>
             <td style="text-align: center;">
                 <label for="returnIssuedAssets"></label>
-                <input type="checkbox" id="returnIssuedAssets" data-id="date remarks" data-date-id="returnIssuedAssetsDateCompleted" data-remarks-id="returnIssuedAssetsRemarks" onchange="toggleDateCompletedAndRemarksFields()" <% if (employee.isReturnIssuedAssets()) { %> checked <% } %> disabled>
+                <input type="checkbox" id="returnIssuedAssets" name="returnIssuedAssets" data-id="date remarks" data-date-id="returnIssuedAssetsDateCompleted" data-remarks-id="returnIssuedAssetsRemarks" onclick="enableEditing(this, 'returnIssuedAssetsDateCompleted', 'returnIssuedAssetsRemarks')" <% if (employee.isReturnIssuedAssets()) { %> checked <% } %> disabled>
             </td>
         </tr>
         <tr>
@@ -245,7 +281,7 @@
             <td style="text-align: center;"><label for="quitclaimFinalPayRemarks"></label><input type="text" id="quitclaimFinalPayRemarks" name="quitclaimFinalPayRemarks" value="<%= employee.getQuitclaimFinalPayRemarks() != null ? employee.getQuitclaimFinalPayRemarks() : "" %>" disabled></td>
             <td style="text-align: center;">
                 <label for="quitclaimFinalPay"></label>
-                <input type="checkbox" id="quitclaimFinalPay" data-id="date remarks" data-date-id="quitclaimFinalPayDateCompleted" data-remarks-id="quitclaimFinalPayRemarks" onchange="toggleDateCompletedAndRemarksFields()" <% if (employee.isQuitclaimFinalPay()) { %> checked <% } %> disabled>
+                <input type="checkbox" id="quitclaimFinalPay" name="quitclaimFinalPay" data-id="date remarks" data-date-id="quitclaimFinalPayDateCompleted" data-remarks-id="quitclaimFinalPayRemarks" onclick="enableEditing(this, 'quitclaimFinalPayDateCompleted', 'quitclaimFinalPayRemarks')" <% if (employee.isQuitclaimFinalPay()) { %> checked <% } %> disabled>
             </td>
         </tr>
         <tr>
@@ -254,7 +290,7 @@
             <td style="text-align: center;"><label for="knowledgeTransferSheetRemarks"></label><input type="text" id="knowledgeTransferSheetRemarks" name="knowledgeTransferSheetRemarks" value="<%= employee.getKnowledgeTransferSheetRemarks() != null ? employee.getKnowledgeTransferSheetRemarks() : "" %>" disabled></td>
             <td style="text-align: center;">
                 <label for="knowledgeTransferSheet"></label>
-                <input type="checkbox" id="knowledgeTransferSheet" data-id="date remarks" data-date-id="knowledgeTransferSheetDateCompleted" data-remarks-id="knowledgeTransferSheetRemarks" onchange="toggleDateCompletedAndRemarksFields()" <% if (employee.isKnowledgeTransferSheet()) { %> checked <% } %> disabled>
+                <input type="checkbox" id="knowledgeTransferSheet" name="knowledgeTransferSheet" data-id="date remarks" data-date-id="knowledgeTransferSheetDateCompleted" data-remarks-id="knowledgeTransferSheetRemarks" onclick="enableEditing(this, 'knowledgeTransferSheetDateCompleted', 'knowledgeTransferSheetRemarks')" <% if (employee.isKnowledgeTransferSheet()) { %> checked <% } %> disabled>
             </td>
         </tr>
     </table>
@@ -272,17 +308,11 @@
             let finalPayReleaseDateInput = document.getElementById("finalPayReleaseDate");
             let booleanValue = checkbox.checked;
 
-            if (checkbox.checked) {
+            if (booleanValue) {
                 resignationDetails.style.display = "block";
-                if (employee.getResignationDate() === null) {
-                    resignationDateInput.disabled = false;
-                }
-                if (employee.getLastDay() === null) {
-                    lastDayInput.disabled = false;
-                }
-                if (employee.getFinalPayReleaseDate() === null) {
-                    finalPayReleaseDateInput.disabled = false;
-                }
+                resignationDateInput.disabled = false;
+                lastDayInput.disabled = false;
+                finalPayReleaseDateInput.disabled = false;
             } else {
                 resignationDetails.style.display = "none";
                 resignationDateInput.value = "";
@@ -300,8 +330,26 @@
         // Function to check the checkbox based on the value returned by isResigned()
         function checkResignedCheckbox() {
             let checkbox = document.getElementById("resigned");
+            let resignationDetails = document.getElementById("resignationDetails");
+            let resignationDateInput = document.getElementById("resignationDate");
+            let lastDayInput = document.getElementById("lastDay");
+            let finalPayReleaseDateInput = document.getElementById("finalPayReleaseDate");
             checkbox.checked = <%= employee.isResigned() %>;
-            toggleResignationDetails();
+
+            if (checkbox.checked) {
+                resignationDetails.style.display = "block";
+                resignationDateInput.disabled = true;
+                lastDayInput.disabled = true;
+                finalPayReleaseDateInput.disabled = true;
+            } else {
+                resignationDetails.style.display = "none";
+                resignationDateInput.value = "";
+                lastDayInput.value = "";
+                finalPayReleaseDateInput.value = "";
+                resignationDateInput.disabled = true;
+                lastDayInput.disabled = true;
+                finalPayReleaseDateInput.disabled = true;
+            }
         }
 
         // Call the function to set the checkbox state on page load
@@ -341,7 +389,7 @@
     <label for="file">Upload Files:</label>
     <input type="file" id="file" name="file" multiple disabled ><br>
     <!-- Display uploaded files -->
-    <h2>UPLOADED FILES</h2>
+    <h3>Uploaded Files:</h3>
     <ul>
         <% if (files != null) { %>
         <% for (EmployeeFile file : files) { %>
@@ -355,11 +403,8 @@
         <li>No files available</li>
         <% } %>
     </ul>
-    <!-- Display uploaded files -->
-    <ul id="uploadedFiles"></ul>
-    <br>
-    <br>
     <hr style="border-top: 2px solid black;">
+    <br>
 
 
     <!-- Hidden input field for employee ID -->
@@ -377,7 +422,6 @@
             checkboxes.forEach(function(checkbox) {
                 let dateCompletedInput = document.getElementById(checkbox.dataset.dateId);
                 let remarksInput = document.getElementById(checkbox.dataset.remarksId);
-                let booleanValue = checkbox.checked;
 
                 if (!checkbox.disabled && checkbox.checked) {
                     dateCompletedInput.disabled = false;
@@ -391,9 +435,6 @@
                     dateCompletedInput.disabled = true;
                     remarksInput.disabled = true;
                 }
-
-                // Set the corresponding boolean value
-                document.getElementById(checkbox.id).value = booleanValue.toString(); // Set boolean value as string
             });
         }
 
@@ -420,7 +461,6 @@
         }
     </script>
 
-
     <!-- Function to delete a file -->
     <script>
         function deleteFile(fileId) {
@@ -432,24 +472,10 @@
                 let xhr = new XMLHttpRequest();
                 xhr.open("POST", "deleteFile");
                 xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState === XMLHttpRequest.DONE) {
-                        if (xhr.status === 200) {
-                            // Reload the page after successful deletion
-                            window.location.reload();
-                            alert('File Deleted Successfully')
-                        } else {
-                            // Handle error
-                            alert('Error deleting file');
-                        }
-                    }
-                };
                 xhr.send("fileId=" + fileId);
             }
         }
     </script>
-
-
 
     <!-- Script to display uploaded files -->
     <script>
@@ -465,6 +491,62 @@
             }
         });
     </script>
+
+    <!-- Function to handle form submission -->
+    <script>
+        function handleSubmit() {
+            // Iterate over all the checkboxes and set their corresponding boolean values
+            let checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(function(checkbox) {
+                document.getElementById(checkbox.name).value = checkbox.checked;
+            });
+            // Submit the form
+            document.getElementById("editProfileForm").submit();
+        }
+    </script>
+
+    <!-- Function for logout button -->
+    <script>
+        function confirmLogout() {
+            var confirmLogout = confirm("Are you sure you want to log out?");
+            if (confirmLogout) {
+                window.location.href = "login.jsp"; // Redirect to login page
+            }
+        }
+    </script>
+
+    <script>
+        // Variable to store the click count
+        let clickCount = 0;
+
+        // Function to check if the form is modified
+        function formIsModified() {
+            // Check if any input field's value has been changed
+            let inputs = document.querySelectorAll('input[type="text"], input[type="date"], input[type="checkbox"]');
+            for (let i = 0; i < inputs.length; i++) {
+                if (inputs[i].defaultValue !== inputs[i].value) {
+                    return true; // Return true if any field is modified
+                }
+            }
+            return false; // Return false if no field is modified
+        }
+
+        // Function to handle button click and increment clickCount
+        function handleButtonClick() {
+            clickCount++; // Increment the click count
+        }
+
+        // Assign the handleButtonClick function to the window.onbeforeunload event
+        window.onbeforeunload = function() {
+            if (formIsModified() && clickCount > 0) {
+                return 'You have unsaved changes. Are you sure you want to leave this page?';
+            }
+        };
+
+        // Event listener for the specific button
+        document.getElementById("toggleEditing").addEventListener("click", handleButtonClick);
+    </script>
+
 
 </form>
 </body>

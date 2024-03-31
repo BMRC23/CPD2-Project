@@ -28,6 +28,12 @@
       text-align: left;
       margin-bottom: 10px;
     }
+    .button-container-left {
+      float: left;
+    }
+    .button-container-right {
+      float: right;
+    }
     .button-container button {
       margin-right: 10px;
     }
@@ -40,10 +46,17 @@
 
 <h1>Create Profile</h1>
 <hr style="border-top: 4px solid black;">
-<!--Back Button-->
-<div class="button-container">
+
+<!-- Button container for Back to Dashboard -->
+<div class="button-container button-container-left">
   <button onclick="window.location.href='dashboard.jsp'">Back to Dashboard</button>
 </div>
+
+<!-- Button container for Log Out -->
+<div class="button-container button-container-right">
+  <button class="logout-button" onclick="confirmLogout()">Log Out</button>
+</div>
+
 <form action="createProfile" method="post" enctype="multipart/form-data">
   <!-- EMPLOYEE DETAILS -->
   <h2>EMPLOYEE DETAILS</h2>
@@ -342,6 +355,39 @@
         fileList.appendChild(listItem);
       }
     });
+  </script>
+
+  <!-- Function for logout button -->
+  <script>
+    function confirmLogout() {
+      var confirmLogout = confirm("Are you sure you want to log out?");
+      if (confirmLogout) {
+        window.location.href = "login.jsp"; // Redirect to login page
+      }
+    }
+  </script>
+
+  <script>
+    // Function to check if the form is modified
+    function formIsModified() {
+      // Check if any input field's value has been changed
+      let inputs = document.querySelectorAll('input[type="text"], input[type="date"], input[type="checkbox"]');
+      for (let i = 0; i < inputs.length; i++) {
+        if (inputs[i].defaultValue !== inputs[i].value) {
+          return true; // Return true if any field is modified
+        }
+      }
+      return false; // Return false if no field is modified
+    }
+  </script>
+
+  <script>
+    // Warn the user before leaving the page if the form is modified
+    window.onbeforeunload = function() {
+      if (formIsModified()) {
+        return 'You have unsaved changes. Are you sure you want to leave this page?';
+      }
+    };
   </script>
 
 

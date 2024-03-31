@@ -39,7 +39,7 @@ public class DeleteProfileServlet extends HttpServlet {
                 int rowsDeleted = deleteEmployeeStmt.executeUpdate();
 
                 if (rowsDeleted > 0) {
-                    // Deletion successful, redirect to dashboard or any other appropriate page
+                    // Deletion successful, redirect to dashboard
                     response.sendRedirect(request.getContextPath() + "/dashboard.jsp");
                 } else {
                     // Handle deletion failure

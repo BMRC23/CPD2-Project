@@ -16,13 +16,22 @@
     h1 {
       text-align: center;
     }
+    .logout-button {
+      float: right;
+      margin-right: 20px;
+    }
   </style>
 </head>
 <body>
 <h1>Employees Dashboard</h1>
 <hr style="border-top: 4px solid black;">
-<button onclick="window.location.href='login.jsp'">Log Out</button>
-<button onclick="window.location.href='createProfile.jsp'">Create Profile</button>
+
+<!-- Button container for Create Profile and Log Out buttons -->
+<div class="button-container">
+  <button onclick="window.location.href='createProfile.jsp'">Create Profile</button>
+  <button class="logout-button" onclick="confirmLogout()">Log Out</button>
+</div>
+
 <table>
   <tr>
     <th>First Name</th>
@@ -43,5 +52,15 @@
   </tr>
   <% } %>
 </table>
+
+<script>
+  function confirmLogout() {
+    var confirmLogout = confirm("Are you sure you want to log out?");
+    if (confirmLogout) {
+      window.location.href = "login.jsp"; // Redirect to login page
+    }
+  }
+</script>
+
 </body>
 </html>

@@ -189,8 +189,14 @@ public class EditProfileServlet extends HttpServlet {
                 stmtFile.executeUpdate();
             }
 
-            // Redirect to the dashboard upon successful update
-            response.sendRedirect("dashboard.jsp");
+            // Redirect back to the previous page
+            String referer = request.getHeader("referer");
+            if (referer != null && !referer.isEmpty()) {
+                response.sendRedirect(referer);
+            } else {
+                // If referer is not available, redirect to a default page
+                response.sendRedirect("dashboard.jsp");
+            }
 
         } catch (SQLException ex) {
             ex.printStackTrace();
