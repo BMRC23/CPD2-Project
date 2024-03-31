@@ -29,6 +29,7 @@
 <!-- Button container for Create Profile and Log Out buttons -->
 <div class="button-container">
   <button onclick="window.location.href='createProfile.jsp'">Create Profile</button>
+  <button onclick="window.location.href='resigndashboard.jsp'">Toggle Resigned Employees</button>
   <button class="logout-button" onclick="confirmLogout()">Log Out</button>
 </div>
 
