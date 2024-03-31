@@ -13,7 +13,7 @@
 
 <html>
 <head>
-    <title>Create Profile</title>
+    <title>Employee Records and File Repository/View Profile</title>
     <style>
         /* Center align the form */
         form {
@@ -48,6 +48,7 @@
         }
         .button-container button {
             margin-right: 10px;
+            margin-bottom: 10px;
         }
         table {
             width: 100%;
@@ -59,12 +60,22 @@
 <h1>View Profile</h1>
 <hr style="border-top: 4px solid black;">
 
-<!-- Button container for Back to Dashboard, Toggle Editing, and Delete Profile-->
+<!-- Button container for Back to Dashboard, Toggle Editing, Delete Profile, and Back To Resign Dashboard-->
 <div class="button-container button-container-left">
     <button onclick="window.location.href='dashboard.jsp'">Back to Dashboard</button>
     <button type="button" id="toggleEditing" name="toggleEditing" onclick="toggleAllFields()">Toggle Editing</button>
     <button type="button" onclick="deleteProfile()">Delete Profile</button>
+    <button id="backToResignDashboard" style="display: none;" onclick="window.location.href='resigndashboard.jsp'">Go to Resigned Employees Dashboard</button>
 </div>
+
+<script>
+    let isResigned = <%= employee.isResigned() %>;
+
+    if (isResigned) {
+        document.getElementById("backToResignDashboard").style.display = "block"; // Display the button
+    }
+</script>
+
 
 <!-- Button container for Log Out -->
 <div class="button-container button-container-right">
@@ -413,6 +424,7 @@
     <!-- Submit Button -->
     <input type="submit" id="saveChangesButton" value="Save Changes" style="display: none;">
 
+
     <!-- Script to enable or disable editing of fields -->
     <script>
         // Function to toggle editing of date completed and remarks fields
@@ -508,7 +520,7 @@
     <!-- Function for logout button -->
     <script>
         function confirmLogout() {
-            var confirmLogout = confirm("Are you sure you want to log out?");
+            let confirmLogout = confirm("Are you sure you want to log out?");
             if (confirmLogout) {
                 window.location.href = "login.jsp"; // Redirect to login page
             }
@@ -518,6 +530,7 @@
     <script>
         // Variable to store the click count
         let clickCount = 0;
+        let saveChangesPressed = false; // Flag to track if "Save Changes" button is pressed
 
         // Function to check if the form is modified
         function formIsModified() {
@@ -536,17 +549,23 @@
             clickCount++; // Increment the click count
         }
 
+        // Function to handle "Save Changes" button click
+        function handleSaveChangesClick() {
+            saveChangesPressed = true; // Set the flag to true when "Save Changes" button is pressed
+        }
+
         // Assign the handleButtonClick function to the window.onbeforeunload event
         window.onbeforeunload = function() {
-            if (formIsModified() && clickCount > 0) {
+            if (formIsModified() && clickCount > 0 && !saveChangesPressed) {
                 return 'You have unsaved changes. Are you sure you want to leave this page?';
             }
         };
 
         // Event listener for the specific button
         document.getElementById("toggleEditing").addEventListener("click", handleButtonClick);
+        // Event listener for the "Save Changes" button
+        document.getElementById("saveChangesButton").addEventListener("click", handleSaveChangesClick);
     </script>
-
 
 </form>
 </body>

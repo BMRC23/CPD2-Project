@@ -29,7 +29,7 @@
 <!-- Button container for Create Profile and Log Out buttons -->
 <div class="button-container">
   <button onclick="window.location.href='createProfile.jsp'">Create Profile</button>
-  <button onclick="window.location.href='resigndashboard.jsp'">Toggle Resigned Employees</button>
+  <button onclick="window.location.href='resigndashboard.jsp'">Go to Resigned Employees Dashboard</button>
   <button class="logout-button" onclick="confirmLogout()">Log Out</button>
 </div>
 
@@ -56,7 +56,7 @@
 
 <script>
   function confirmLogout() {
-    var confirmLogout = confirm("Are you sure you want to log out?");
+    let confirmLogout = confirm("Are you sure you want to log out?");
     if (confirmLogout) {
       window.location.href = "login.jsp"; // Redirect to login page
     }

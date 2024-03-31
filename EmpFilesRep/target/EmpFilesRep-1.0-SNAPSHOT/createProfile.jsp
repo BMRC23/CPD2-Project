@@ -357,10 +357,14 @@
     });
   </script>
 
+
+  <!-- Submit Button -->
+  <input type="submit" id="submitButton" value="Submit">
+
   <!-- Function for logout button -->
   <script>
     function confirmLogout() {
-      var confirmLogout = confirm("Are you sure you want to log out?");
+      let confirmLogout = confirm("Are you sure you want to log out?");
       if (confirmLogout) {
         window.location.href = "login.jsp"; // Redirect to login page
       }
@@ -368,6 +372,8 @@
   </script>
 
   <script>
+    let submitPressed = false; // Flag to track if "Submit" button is pressed
+
     // Function to check if the form is modified
     function formIsModified() {
       // Check if any input field's value has been changed
@@ -379,20 +385,23 @@
       }
       return false; // Return false if no field is modified
     }
-  </script>
 
-  <script>
-    // Warn the user before leaving the page if the form is modified
+    // Function to handle "Save Changes" button click
+    function handleSubmitClick() {
+      submitPressed = true; // Set the flag to true when "Submit" button is pressed
+    }
+
+    // Assign the handleButtonClick function to the window.onbeforeunload event
     window.onbeforeunload = function() {
-      if (formIsModified()) {
+      if (formIsModified() && !submitPressed) {
         return 'You have unsaved changes. Are you sure you want to leave this page?';
       }
     };
+
+    // Event listener for the "Submit" button
+    document.getElementById("submitButton").addEventListener("click", handleSubmitClick);
   </script>
 
-
-  <!-- Submit Button -->
-  <input type="submit" value="Submit">
 </form>
 </body>
 </html>

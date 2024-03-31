@@ -13,5 +13,13 @@
         <url-pattern>/hello-servlet</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>EditProfileServlet</servlet-name>
+        <servlet-class>com.example.empfilesrep.EditProfileServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EditProfileServlet</servlet-name>
+        <url-pattern>/editProfile</url-pattern>
+    </servlet-mapping>
 
 </web-app>
