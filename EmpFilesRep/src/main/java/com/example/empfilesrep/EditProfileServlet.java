@@ -1,6 +1,5 @@
 package com.example.empfilesrep;
 
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -111,7 +110,8 @@ public class EditProfileServlet extends HttpServlet {
                 "employeeContractRemarks=?, microsoftAccountDateCompleted=?, microsoftAccountRemarks=?, issuedAssetsDateCompleted=?, issuedAssetsRemarks=?, requiredLicensesDateCompleted=?, requiredLicensesRemarks=?, trelloInviteDateCompleted=?, trelloInviteRemarks=?, " +
                 "teamsShiftsDateCompleted=?, teamsShiftsRemarks=?, enrolToPayrollDateCompleted=?, enrolToPayrollRemarks=?, certificateEmploymentDateCompleted=?, certificateEmploymentRemarks=?, birForm2316DateCompleted=?, birForm2316Remarks=?, returnIssuedAssetsDateCompleted=?, " +
                 "returnIssuedAssetsRemarks=?, quitclaimFinalPayDateCompleted=?, quitclaimFinalPayRemarks=?, knowledgeTransferSheetDateCompleted=?, knowledgeTransferSheetRemarks=?, resigned=?, resignationDate=?, lastDay=?, finalPayReleaseDate=?, employeeContract=?, microsoftAccount=?," +
-                "issuedAssets=?, requiredLicenses=?, trelloInvite=?, enrolToPayroll=?, certificateEmployment=?, birForm2316=?, returnIssuedAssets=?, quitclaimFinalPay=?, knowledgeTransferSheet=? WHERE id=?";
+                "issuedAssets=?, requiredLicenses=?, trelloInvite=?, teamsShifts=?, enrolToPayroll=?, certificateEmployment=?, birForm2316=?, returnIssuedAssets=?, quitclaimFinalPay=?, knowledgeTransferSheet=? WHERE id=?";
+
 
         String sqlFile = "INSERT INTO EmployeeFiles (employee_id, filename, filetype, filedata) VALUES (?, ?, ?, ?)";
 
@@ -172,6 +172,7 @@ public class EditProfileServlet extends HttpServlet {
             stmtEmployee.setBoolean(52, returnIssuedAssets);
             stmtEmployee.setBoolean(53, quitclaimFinalPay);
             stmtEmployee.setBoolean(54, knowledgeTransferSheet);
+            stmtEmployee.setInt(55, id);
 
             // Execute employee update query
             int affectedRows = stmtEmployee.executeUpdate();
@@ -187,6 +188,9 @@ public class EditProfileServlet extends HttpServlet {
                 stmtFile.setBlob(4, fileContents.get(i));
                 stmtFile.executeUpdate();
             }
+
+            // Redirect to the dashboard upon successful update
+            response.sendRedirect("dashboard.jsp");
 
         } catch (SQLException ex) {
             ex.printStackTrace();

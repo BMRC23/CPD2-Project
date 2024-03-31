@@ -6,6 +6,7 @@
 <%
     // Retrieve employee details from the database
     Employee employee = (Employee) request.getAttribute("employee");
+    @SuppressWarnings("unchecked") // Suppress warning for this line
     List<EmployeeFile> files = (List<EmployeeFile>) request.getAttribute("files");
 
 %>
@@ -58,17 +59,17 @@
 </div>
 
 <form id="deleteProfileForm" action="deleteProfile" method="post">
-    <input type="hidden" id="employeeId" name="id" value="<%= employee.getId() %>">
+    <input type="hidden" id="employeeId" name="employeeId" value="<%= employee.getId() %>">
 </form>
 
 <script>
     function deleteProfile() {
         // Confirm deletion
-        var confirmDelete = confirm('Are you sure you want to delete this profile?');
+        let confirmDelete = confirm('Are you sure you want to delete this profile?');
 
         // If confirmed, submit the form
         if (confirmDelete) {
-            var form = document.getElementById("deleteProfileForm");
+            let form = document.getElementById("deleteProfileForm");
             form.submit();
         }
 
@@ -155,43 +156,43 @@
             <td style="text-align: center;">Employee Contract</td>
             <td style="text-align: center;"><label for="employeeContractDateCompleted"></label><input type="date" id="employeeContractDateCompleted" name="employeeContractDateCompleted" value="<%= employee.getEmployeeContractDateCompleted() %>" disabled></td>
             <td style="text-align: center;"><label for="employeeContractRemarks"></label><input type="text" id="employeeContractRemarks" name="employeeContractRemarks" value="<%= employee.getEmployeeContractRemarks() != null ? employee.getEmployeeContractRemarks() : "" %>" disabled></td>
-            <td style="text-align: center;"><label for="employeeContract"></label><input type="checkbox" id="employeeContract" data-id="date remarks" data-date-id="employeeContractDateCompleted" data-remarks-id="employeeContractRemarks" onchange="toggleDateCompletedAndRemarksFields()" <%= employee.isEmployeeContract() ? "checked" : "" %> disabled></td>
+            <td style="text-align: center;"><label for="employeeContract"></label><input type="checkbox" id="employeeContract" data-id="date remarks" data-date-id="employeeContractDateCompleted" data-remarks-id="employeeContractRemarks" onchange="toggleDateCompletedAndRemarksFields()" <% if (employee.isEmployeeContract()) { %> checked <% } %> disabled></td>
         </tr>
         <tr>
             <td style="text-align: center;">Microsoft Account / Email Address</td>
             <td style="text-align: center;"><label for="microsoftAccountDateCompleted"></label><input type="date" id="microsoftAccountDateCompleted" name="microsoftAccountDateCompleted" value="<%= employee.getMicrosoftAccountDateCompleted() %>" disabled></td>
             <td style="text-align: center;"><label for="microsoftAccountRemarks"></label><input type="text" id="microsoftAccountRemarks" name="microsoftAccountRemarks" value="<%= employee.getMicrosoftAccountRemarks() != null ? employee.getMicrosoftAccountRemarks() : "" %>" disabled></td>
-            <td style="text-align: center;"><label for="microsoftAccount"></label><input type="checkbox" id="microsoftAccount" data-id="date remarks" data-date-id="microsoftAccountDateCompleted" data-remarks-id="microsoftAccountRemarks" onchange="toggleDateCompletedAndRemarksFields()" <%= employee.isMicrosoftAccount() ? "checked" : "" %> disabled></td>
+            <td style="text-align: center;"><label for="microsoftAccount"></label><input type="checkbox" id="microsoftAccount" data-id="date remarks" data-date-id="microsoftAccountDateCompleted" data-remarks-id="microsoftAccountRemarks" onchange="toggleDateCompletedAndRemarksFields()" <% if (employee.isMicrosoftAccount()) { %> checked <% } %> disabled></td>
         </tr>
         <tr>
             <td style="text-align: center;">Issued Assets</td>
             <td style="text-align: center;"><label for="issuedAssetsDateCompleted"></label><input type="date" id="issuedAssetsDateCompleted" name="issuedAssetsDateCompleted" value="<%= employee.getIssuedAssetsDateCompleted() %>" disabled></td>
             <td style="text-align: center;"><label for="issuedAssetsRemarks"></label><input type="text" id="issuedAssetsRemarks" name="issuedAssetsRemarks" value="<%= employee.getIssuedAssetsRemarks() != null ? employee.getIssuedAssetsRemarks() : "" %>" disabled></td>
-            <td style="text-align: center;"><label for="issuedAssets"></label><input type="checkbox" id="issuedAssets" data-id="date remarks" data-date-id="issuedAssetsDateCompleted" data-remarks-id="issuedAssetsRemarks" onchange="toggleDateCompletedAndRemarksFields()" <%= employee.isIssuedAssets() ? "checked" : "" %> disabled></td>
+            <td style="text-align: center;"><label for="issuedAssets"></label><input type="checkbox" id="issuedAssets" data-id="date remarks" data-date-id="issuedAssetsDateCompleted" data-remarks-id="issuedAssetsRemarks" onchange="toggleDateCompletedAndRemarksFields()" <% if (employee.isIssuedAssets()) { %> checked <% } %> disabled></td>
         </tr>
         <tr>
             <td style="text-align: center;">Required Licenses</td>
             <td style="text-align: center;"><label for="requiredLicensesDateCompleted"></label><input type="date" id="requiredLicensesDateCompleted" name="requiredLicensesDateCompleted" value="<%= employee.getRequiredLicensesDateCompleted() %>" disabled></td>
             <td style="text-align: center;"><label for="requiredLicensesRemarks"></label><input type="text" id="requiredLicensesRemarks" name="requiredLicensesRemarks" value="<%= employee.getRequiredLicensesRemarks() != null ? employee.getRequiredLicensesRemarks() : "" %>" disabled></td>
-            <td style="text-align: center;"><label for="requiredLicenses"></label><input type="checkbox" id="requiredLicenses" data-id="date remarks" data-date-id="requiredLicensesDateCompleted" data-remarks-id="requiredLicensesRemarks" onchange="toggleDateCompletedAndRemarksFields()" <%= employee.isRequiredLicenses() ? "checked" : "" %> disabled></td>
+            <td style="text-align: center;"><label for="requiredLicenses"></label><input type="checkbox" id="requiredLicenses" data-id="date remarks" data-date-id="requiredLicensesDateCompleted" data-remarks-id="requiredLicensesRemarks" onchange="toggleDateCompletedAndRemarksFields()" <% if (employee.isRequiredLicenses()) { %> checked <% } %> disabled></td>
         </tr>
         <tr>
             <td style="text-align: center;">Trello Invite</td>
             <td style="text-align: center;"><label for="trelloInviteDateCompleted"></label><input type="date" id="trelloInviteDateCompleted" name="trelloInviteDateCompleted" value="<%= employee.getTrelloInviteDateCompleted() %>" disabled></td>
             <td style="text-align: center;"><label for="trelloInviteRemarks"></label><input type="text" id="trelloInviteRemarks" name="trelloInviteRemarks" value="<%= employee.getTrelloInviteRemarks() != null ? employee.getTrelloInviteRemarks() : "" %>" disabled></td>
-            <td style="text-align: center;"><label for="trelloInvite"></label><input type="checkbox" id="trelloInvite" data-id="date remarks" data-date-id="trelloInviteDateCompleted" data-remarks-id="trelloInviteRemarks" onchange="toggleDateCompletedAndRemarksFields()" <%= employee.isTrelloInvite() ? "checked" : "" %> disabled></td>
+            <td style="text-align: center;"><label for="trelloInvite"></label><input type="checkbox" id="trelloInvite" data-id="date remarks" data-date-id="trelloInviteDateCompleted" data-remarks-id="trelloInviteRemarks" onchange="toggleDateCompletedAndRemarksFields()" <% if (employee.isTrelloInvite()) { %> checked <% } %> disabled></td>
         </tr>
         <tr>
             <td style="text-align: center;">Teams/Shifts</td>
             <td style="text-align: center;"><label for="teamsShiftsDateCompleted"></label><input type="date" id="teamsShiftsDateCompleted" name="teamsShiftsDateCompleted" value="<%= employee.getTeamsShiftsDateCompleted() %>" disabled></td>
             <td style="text-align: center;"><label for="teamsShiftsRemarks"></label><input type="text" id="teamsShiftsRemarks" name="teamsShiftsRemarks" value="<%= employee.getTeamsShiftsRemarks() != null ? employee.getTeamsShiftsRemarks() : "" %>" disabled></td>
-            <td style="text-align: center;"><label for="teamsShifts"></label><input type="checkbox" id="teamsShifts" data-id="date remarks" data-date-id="teamsShiftsDateCompleted" data-remarks-id="teamsShiftsRemarks" onchange="toggleDateCompletedAndRemarksFields()" <%= employee.isTeamsShifts() ? "checked" : "" %> disabled></td>
+            <td style="text-align: center;"><label for="teamsShifts"></label><input type="checkbox" id="teamsShifts" data-id="date remarks" data-date-id="teamsShiftsDateCompleted" data-remarks-id="teamsShiftsRemarks" onchange="toggleDateCompletedAndRemarksFields()" <% if (employee.isTeamsShifts()) { %> checked <% } %> disabled></td>
         </tr>
         <tr>
             <td style="text-align: center;">Enrol to Payroll</td>
             <td style="text-align: center;"><label for="enrolToPayrollDateCompleted"></label><input type="date" id="enrolToPayrollDateCompleted" name="enrolToPayrollDateCompleted" value="<%= employee.getEnrolToPayrollDateCompleted() %>" disabled></td>
             <td style="text-align: center;"><label for="enrolToPayrollRemarks"></label><input type="text" id="enrolToPayrollRemarks" name="enrolToPayrollRemarks" value="<%= employee.getEnrolToPayrollRemarks() != null ? employee.getEnrolToPayrollRemarks() : ""  %>" disabled></td>
-            <td style="text-align: center;"><label for="enrolToPayroll"></label><input type="checkbox" id="enrolToPayroll" data-id="date remarks" data-date-id="enrolToPayrollDateCompleted" data-remarks-id="enrolToPayrollRemarks" onchange="toggleDateCompletedAndRemarksFields()" <%= employee.isEnrolToPayroll() ? "checked" : "" %> disabled></td>
+            <td style="text-align: center;"><label for="enrolToPayroll"></label><input type="checkbox" id="enrolToPayroll" data-id="date remarks" data-date-id="enrolToPayrollDateCompleted" data-remarks-id="enrolToPayrollRemarks" onchange="toggleDateCompletedAndRemarksFields()" <% if (employee.isEnrolToPayroll()) { %> checked <% } %> disabled></td>
         </tr>
     </table>
     <br>
@@ -217,7 +218,7 @@
             <td style="text-align: center;"><label for="certificateEmploymentRemarks"></label><input type="text" id="certificateEmploymentRemarks" name="certificateEmploymentRemarks" value="<%= employee.getCertificateEmploymentRemarks() != null ? employee.getCertificateEmploymentRemarks() : ""  %>" disabled></td>
             <td style="text-align: center;">
                 <label for="certificateEmployment"></label>
-                <input type="checkbox" id="certificateEmployment" data-id="date remarks" data-date-id="certificateEmploymentDateCompleted" data-remarks-id="certificateEmploymentRemarks" onchange="toggleDateCompletedAndRemarksFields()" <%= employee.isCertificateEmployment() ? "checked" : "" %> disabled>
+                <input type="checkbox" id="certificateEmployment" data-id="date remarks" data-date-id="certificateEmploymentDateCompleted" data-remarks-id="certificateEmploymentRemarks" onchange="toggleDateCompletedAndRemarksFields()" <% if (employee.isCertificateEmployment()) { %> checked <% } %> disabled>
             </td>
         </tr>
         <tr>
@@ -226,7 +227,7 @@
             <td style="text-align: center;"><label for="birForm2316Remarks"></label><input type="text" id="birForm2316Remarks" name="birForm2316Remarks" value="<%= employee.getBirForm2316Remarks() != null ? employee.getBirForm2316Remarks() : "" %>" disabled></td>
             <td style="text-align: center;">
                 <label for="birForm2316"></label>
-                <input type="checkbox" id="birForm2316" data-id="date remarks" data-date-id="birForm2316DateCompleted" data-remarks-id="birForm2316Remarks" onchange="toggleDateCompletedAndRemarksFields()" <%= employee.isBirForm2316() ? "checked" : "" %> disabled>
+                <input type="checkbox" id="birForm2316" data-id="date remarks" data-date-id="birForm2316DateCompleted" data-remarks-id="birForm2316Remarks" onchange="toggleDateCompletedAndRemarksFields()" <% if (employee.isBirForm2316()) { %> checked <% } %> disabled>
             </td>
         </tr>
         <tr>
@@ -235,7 +236,7 @@
             <td style="text-align: center;"><label for="returnIssuedAssetsRemarks"></label><input type="text" id="returnIssuedAssetsRemarks" name="returnIssuedAssetsRemarks" value="<%= employee.getReturnIssuedAssetsRemarks() != null ? employee.getReturnIssuedAssetsRemarks() : "" %>" disabled></td>
             <td style="text-align: center;">
                 <label for="returnIssuedAssets"></label>
-                <input type="checkbox" id="returnIssuedAssets" data-id="date remarks" data-date-id="returnIssuedAssetsDateCompleted" data-remarks-id="returnIssuedAssetsRemarks" onchange="toggleDateCompletedAndRemarksFields()" <%= employee.isReturnIssuedAssets() ? "checked" : "" %> disabled>
+                <input type="checkbox" id="returnIssuedAssets" data-id="date remarks" data-date-id="returnIssuedAssetsDateCompleted" data-remarks-id="returnIssuedAssetsRemarks" onchange="toggleDateCompletedAndRemarksFields()" <% if (employee.isReturnIssuedAssets()) { %> checked <% } %> disabled>
             </td>
         </tr>
         <tr>
@@ -244,7 +245,7 @@
             <td style="text-align: center;"><label for="quitclaimFinalPayRemarks"></label><input type="text" id="quitclaimFinalPayRemarks" name="quitclaimFinalPayRemarks" value="<%= employee.getQuitclaimFinalPayRemarks() != null ? employee.getQuitclaimFinalPayRemarks() : "" %>" disabled></td>
             <td style="text-align: center;">
                 <label for="quitclaimFinalPay"></label>
-                <input type="checkbox" id="quitclaimFinalPay" data-id="date remarks" data-date-id="quitclaimFinalPayDateCompleted" data-remarks-id="quitclaimFinalPayRemarks" onchange="toggleDateCompletedAndRemarksFields()" <%= employee.isQuitclaimFinalPay() ? "checked" : "" %> disabled>
+                <input type="checkbox" id="quitclaimFinalPay" data-id="date remarks" data-date-id="quitclaimFinalPayDateCompleted" data-remarks-id="quitclaimFinalPayRemarks" onchange="toggleDateCompletedAndRemarksFields()" <% if (employee.isQuitclaimFinalPay()) { %> checked <% } %> disabled>
             </td>
         </tr>
         <tr>
@@ -253,7 +254,7 @@
             <td style="text-align: center;"><label for="knowledgeTransferSheetRemarks"></label><input type="text" id="knowledgeTransferSheetRemarks" name="knowledgeTransferSheetRemarks" value="<%= employee.getKnowledgeTransferSheetRemarks() != null ? employee.getKnowledgeTransferSheetRemarks() : "" %>" disabled></td>
             <td style="text-align: center;">
                 <label for="knowledgeTransferSheet"></label>
-                <input type="checkbox" id="knowledgeTransferSheet" data-id="date remarks" data-date-id="knowledgeTransferSheetDateCompleted" data-remarks-id="knowledgeTransferSheetRemarks" onchange="toggleDateCompletedAndRemarksFields()" <%= employee.isKnowledgeTransferSheet() ? "checked" : "" %> disabled>
+                <input type="checkbox" id="knowledgeTransferSheet" data-id="date remarks" data-date-id="knowledgeTransferSheetDateCompleted" data-remarks-id="knowledgeTransferSheetRemarks" onchange="toggleDateCompletedAndRemarksFields()" <% if (employee.isKnowledgeTransferSheet()) { %> checked <% } %> disabled>
             </td>
         </tr>
     </table>
@@ -264,11 +265,12 @@
     <script>
         // Function to toggle resignation details based on existing data
         function toggleResignationDetails() {
-            var checkbox = document.getElementById("resigned");
-            var resignationDetails = document.getElementById("resignationDetails");
-            var resignationDateInput = document.getElementById("resignationDate");
-            var lastDayInput = document.getElementById("lastDay");
-            var finalPayReleaseDateInput = document.getElementById("finalPayReleaseDate");
+            let checkbox = document.getElementById("resigned");
+            let resignationDetails = document.getElementById("resignationDetails");
+            let resignationDateInput = document.getElementById("resignationDate");
+            let lastDayInput = document.getElementById("lastDay");
+            let finalPayReleaseDateInput = document.getElementById("finalPayReleaseDate");
+            let booleanValue = checkbox.checked;
 
             if (checkbox.checked) {
                 resignationDetails.style.display = "block";
@@ -290,11 +292,14 @@
                 lastDayInput.disabled = true;
                 finalPayReleaseDateInput.disabled = true;
             }
+
+            // Set the corresponding boolean value
+            document.getElementById("resigned").value = booleanValue ? 'true' : 'false'; // Set boolean value as string
         }
 
         // Function to check the checkbox based on the value returned by isResigned()
         function checkResignedCheckbox() {
-            var checkbox = document.getElementById("resigned");
+            let checkbox = document.getElementById("resigned");
             checkbox.checked = <%= employee.isResigned() %>;
             toggleResignationDetails();
         }
@@ -342,6 +347,8 @@
         <% for (EmployeeFile file : files) { %>
         <li>
             <a href="downloadFile?fileId=<%= file.getId() %>" target="_blank"><%= file.getFilename() %></a>
+            <!-- Delete button with onclick event to call deleteFile function -->
+            <button onclick="deleteFile(<%= file.getId() %>)" disabled >Delete</button>
         </li>
         <% } %>
         <% } else { %>
@@ -359,17 +366,59 @@
     <input type="hidden" name="id" value="<%= employee.getId() %>">
 
     <!-- Submit Button -->
-    <input type="submit" value="Save Changes">
+    <input type="submit" id="saveChangesButton" value="Save Changes" style="display: none;">
 
     <!-- Script to enable or disable editing of fields -->
     <script>
-        // Function to toggle editing of date completed and remarks fields
+        // Function to toggle editing of date completed and remarks fields and update boolean values
         function toggleDateCompletedAndRemarksFields() {
-            var checkboxes = document.querySelectorAll('input[type="checkbox"][data-id="date remarks"]');
+            let checkboxes = document.querySelectorAll('input[type="checkbox"][data-id="date remarks"]');
 
             checkboxes.forEach(function(checkbox) {
-                var dateCompletedInput = document.getElementById(checkbox.dataset.dateId);
-                var remarksInput = document.getElementById(checkbox.dataset.remarksId);
+                let dateCompletedInput = document.getElementById(checkbox.dataset.dateId);
+                let remarksInput = document.getElementById(checkbox.dataset.remarksId);
+                let booleanValue = checkbox.checked;
+
+                // Update the associated boolean value based on the new state of the checkbox
+                switch (checkbox.id) {
+                    case "employeeContract":
+                        employee.setEmployeeContract(booleanValue);
+                        break;
+                    case "microsoftAccount":
+                        employee.setMicrosoftAccount(booleanValue);
+                        break;
+                    case "issuedAssets":
+                        employee.setIssuedAssets(booleanValue);
+                        break;
+                    case "requiredLicenses":
+                        employee.setRequiredLicenses(booleanValue);
+                        break;
+                    case "trelloInvite":
+                        employee.setTrelloInvite(booleanValue);
+                        break;
+                    case "teamsShifts":
+                        employee.setTeamsShifts(booleanValue);
+                        break;
+                    case "enrolToPayroll":
+                        employee.setEnrolToPayroll(booleanValue);
+                        break;
+                    case "certificateEmployment":
+                        employee.setCertificateEmployment(booleanValue);
+                        break;
+                    case "birForm2316":
+                        employee.setBirForm2316(booleanValue);
+                        break;
+                    case "returnIssuedAssets":
+                        employee.setReturnIssuedAssets(booleanValue);
+                        break;
+                    case "quitclaimFinalPay":
+                        employee.setQuitclaimFinalPay(booleanValue);
+                        break;
+                    case "knowledgeTransferSheet":
+                        employee.setKnowledgeTransferSheet(booleanValue);
+                        break;
+                    // Add more cases if you have additional checkboxes
+                }
 
                 if (!checkbox.disabled && checkbox.checked) {
                     dateCompletedInput.disabled = false;
@@ -383,37 +432,79 @@
                     dateCompletedInput.disabled = true;
                     remarksInput.disabled = true;
                 }
+
+                // Set the corresponding boolean value
+                document.getElementById(checkbox.id).value = booleanValue.toString(); // Set boolean value as string
             });
         }
 
-
         // Function to toggle all fields
         function toggleAllFields() {
-            var inputs = document.querySelectorAll('input[type="text"], input[type="date"], input[type="file"], input[type="checkbox"]');
+            let inputs = document.querySelectorAll('input[type="text"], input[type="date"], input[type="file"], input[type="checkbox"]');
             inputs.forEach(function(input) {
                 input.disabled = !input.disabled;
             });
 
+            // Enable or disable delete buttons for uploaded files
+            let deleteButtons = document.querySelectorAll('ul li button');
+            deleteButtons.forEach(function(button) {
+                button.disabled = !button.disabled;
+            });
+
             // Call toggleDateCompletedAndRemarksFields function to update date completed and remarks fields
             toggleDateCompletedAndRemarksFields();
+
+            // Toggle the visibility of the "Save Changes" button
+            let saveChangesButton = document.getElementById("saveChangesButton");
+            saveChangesButton.style.display = saveChangesButton.style.display === "none" ? "block" : "none";
         }
     </script>
+
+    <!-- Function to delete a file -->
+    <script>
+        function deleteFile(fileId) {
+            // Confirm deletion
+            let confirmDelete = confirm('Are you sure you want to delete this file?');
+
+            // If confirmed, send an AJAX request to the DeleteFileServlet
+            if (confirmDelete) {
+                let xhr = new XMLHttpRequest();
+                xhr.open("POST", "deleteFile");
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        if (xhr.status === 200) {
+                            // Reload the page after successful deletion
+                            window.location.reload();
+                            alert('File Deleted Successfully')
+                        } else {
+                            // Handle error
+                            alert('Error deleting file');
+                        }
+                    }
+                };
+                xhr.send("fileId=" + fileId);
+            }
+        }
+    </script>
+
 
 
     <!-- Script to display uploaded files -->
     <script>
         document.getElementById("file").addEventListener("change", function () {
-            var fileList = document.getElementById("uploadedFiles");
+            let fileList = document.getElementById("uploadedFiles");
             fileList.innerHTML = ""; // Clear the list
 
-            var files = this.files;
-            for (var i = 0; i < files.length; i++) {
-                var listItem = document.createElement("li");
+            let files = this.files;
+            for (let i = 0; i < files.length; i++) {
+                let listItem = document.createElement("li");
                 listItem.textContent = files[i].name;
                 fileList.appendChild(listItem);
             }
         });
     </script>
+
 </form>
 </body>
 </html>

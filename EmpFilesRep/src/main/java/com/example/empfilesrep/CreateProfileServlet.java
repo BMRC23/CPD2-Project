@@ -113,8 +113,8 @@ public class CreateProfileServlet extends HttpServlet {
         String sqlEmployee = "INSERT INTO employee (firstName, middleName, lastName, jobPosition, dateHired, address, contactNumber, birthdate, sss, tin, philHealth, pagIbig, emergencyContactName, emergencyContactNumber, employeeContractDateCompleted, " +
                 "employeeContractRemarks, microsoftAccountDateCompleted, microsoftAccountRemarks, issuedAssetsDateCompleted, issuedAssetsRemarks, requiredLicensesDateCompleted, requiredLicensesRemarks, trelloInviteDateCompleted, trelloInviteRemarks, " +
                 "teamsShiftsDateCompleted, teamsShiftsRemarks, enrolToPayrollDateCompleted, enrolToPayrollRemarks, certificateEmploymentDateCompleted, certificateEmploymentRemarks, birForm2316DateCompleted, birForm2316Remarks, returnIssuedAssetsDateCompleted, " +
-                "returnIssuedAssetsRemarks, quitclaimFinalPayDateCompleted, quitclaimFinalPayRemarks, knowledgeTransferSheetDateCompleted, knowledgeTransferSheetRemarks, resigned, resignationDate, lastDay, finalPayReleaseDate, employeeContract, microsoftAccount" +
-                "issuedAssets, requiredLicenses, trelloInvite, teamsShifts, enrolToPayroll, certificateEmployment, birForm2316, returnIssuedAssets, quitClaimFinalPay, knowledgeTrasnferSheet) " +
+                "returnIssuedAssetsRemarks, quitclaimFinalPayDateCompleted, quitclaimFinalPayRemarks, knowledgeTransferSheetDateCompleted, knowledgeTransferSheetRemarks, resigned, resignationDate, lastDay, finalPayReleaseDate, employeeContract, microsoftAccount," +
+                "issuedAssets, requiredLicenses, trelloInvite, teamsShifts, enrolToPayroll, certificateEmployment, birForm2316, returnIssuedAssets, quitClaimFinalPay, knowledgeTransferSheet) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String sqlFile = "INSERT INTO EmployeeFiles (employee_id, filename, filetype, filedata) VALUES (?, ?, ?, ?)";
 

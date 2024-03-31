@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class DeleteProfileServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // Retrieve employee ID from request parameters
-        int employeeId = Integer.parseInt(request.getParameter("id"));
+        int employeeId = Integer.parseInt(request.getParameter("employeeId"));
 
         // Database connection parameters
         String url = "jdbc:mysql://localhost:3306/employeelist";
