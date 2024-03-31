@@ -212,6 +212,16 @@ public class CreateProfileServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String filter = request.getParameter("filter");
+        List<Employee> employees;
+
+        // Check if the filter parameter is set to "resigned"
+        if ("resigned".equals(filter)) {
+            employees = EmployeeService.getResignedEmployeesFromDatabase();
+        } else {
+            employees = EmployeeService.getAllEmployeesFromDatabase();
+        }
+        request.setAttribute("employees", employees);
         request.getRequestDispatcher("createProfile.jsp").forward(request, response);
     }
 
