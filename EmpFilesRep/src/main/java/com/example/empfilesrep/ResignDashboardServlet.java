@@ -18,7 +18,7 @@ public class ResignDashboardServlet extends HttpServlet {
             request.setAttribute("resignedEmployees", resignedEmployees);
 
             // Forward the request to the dashboard.jsp file for rendering
-            request.getRequestDispatcher("/dashboard.jsp").forward(request, response);
+            request.getRequestDispatcher("/resigndashboard.jsp").forward(request, response);
         } catch (RuntimeException e) {
             String errorMessage = e.getMessage();
             String script = "alert('" + errorMessage + "');";

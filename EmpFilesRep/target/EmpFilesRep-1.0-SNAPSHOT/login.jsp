@@ -72,7 +72,8 @@
         }
 
         input[type="submit"]:hover {
-            background-color: royalblue;
+            background-color: #000040;
+            color: goldenrod;
         }
         .company-message {
             position: absolute; /* Set company message position to absolute */

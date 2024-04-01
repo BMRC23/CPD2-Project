@@ -1,9 +1,71 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
-  <title>Create Profile</title>
+  <title>Employee Records and File Repository/Create Profile</title>
   <style>
-    /* Center align the form */
+    @font-face {
+      font-family: 'Pixeloid Sans Bold';
+      src: url('fonts/PixeloidSansBold-PKnYd.ttf') format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Pixeloid Sans';
+      src: url('fonts/PixeloidSans-mLxMm.ttf') format('truetype');
+    }
+
+    body {
+      font-family: 'Pixeloid Sans', sans-serif;
+      background-color: #000040;
+      color: black;
+      margin: 0;
+      padding: 0;
+    }
+    .background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('images/employeeGraphic.jpg');
+      background-size: 80%;
+      background-position: center;
+      background-attachment: fixed;
+      filter: blur(20px);
+      z-index: -1;
+    }
+
+    .top-line {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #000040;
+      padding: 3vh 0;
+      font-family: 'Pixeloid Sans Bold', sans-serif;
+      font-size: 3vh;
+      color: goldenrod;
+      text-align: center;
+      border-bottom: darkgoldenrod 4px solid;
+      margin: 0;
+      text-transform: uppercase;
+      text-shadow: -0.1vh 0 white, 0 0.1vh white, 0.1vh 0 white, 0 -0.1vh white;
+    }
+
+    .bottom-line {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: #000040;
+      padding: 3vh 0;
+      font-family: 'Pixeloid Sans Bold', sans-serif;
+      font-size: 2vh;
+      color: goldenrod;
+      text-align: center;
+      border-top: darkgoldenrod 4px solid;
+      text-shadow: -0.05vh 0 white, 0 0.05vh white, 0.05vh 0 white, 0 -0.05vh white;
+    }
+
     form {
       width: 50%;
       margin: 0 auto;
@@ -18,42 +80,74 @@
       display: block;
       margin-bottom: 5px;
     }
-    input[type="text"], input[type="submit"], input[type="checkbox"] {
+    input[type="text"], input[type="checkbox"] {
       width: calc(100% - 20px);
       padding: 5px;
       margin-bottom: 10px;
       font-size: 14px; /* Adjust font size */
     }
+    input[type="submit"] {
+      display: flex;
+      background-color: dodgerblue;
+      color: black;
+      padding: 0.5vh 0.5vw;
+      border-radius: 1vh; /* Adjust border radius based on viewport height */
+      cursor: pointer;
+      transition: background-color 0.3s;
+      font-family: 'Pixeloid Sans', sans-serif;
+      font-size: 0.8vw;
+      margin-bottom: 12vh; /* Increased bottom margin */
+      z-index: 1; /* Ensure button is visible */
+      width: calc(100% - 20px);
+      text-align: center;
+      justify-content: center;
+      align-items: center;
+    }
+    input[type="submit"]:hover {
+      background-color: #000040;
+      color: goldenrod;
+    }
     .button-container {
-      text-align: left;
-      margin-bottom: 10px;
+      display: flex;
+      justify-content: flex-start;
+      margin-top: 12vh; /* Increased top margin */
+      z-index: 1; /* Ensure buttons are visible */
+      padding: 0 20px;
     }
-    .button-container-left {
-      float: left;
+    .logout-button {
+      margin-left: auto;
     }
-    .button-container-right {
-      float: right;
+    button{
+      background-color: dodgerblue;
+      color: black;
+      padding: 0.5vh 0.5vw;
+      border-radius: 1vh; /* Adjust border radius based on viewport height */
+      cursor: pointer;
+      transition: background-color 0.3s;
+      font-family: 'Pixeloid Sans', sans-serif;
+      font-size: 0.8vw;
     }
-    .button-container button {
-      margin-right: 10px;
+    button:hover {
+      background-color: #000040;
+      color: goldenrod;
     }
     table {
       width: 100%;
+      background-color: white;
     }
   </style>
 </head>
 <body>
 
-<h1>Create Profile</h1>
-<hr style="border-top: 4px solid black;">
-
-<!-- Button container for Back to Dashboard -->
-<div class="button-container button-container-left">
-  <button onclick="window.location.href='dashboard.jsp'">Back to Dashboard</button>
+<div class="top-line">
+  Create Profile
 </div>
 
-<!-- Button container for Log Out -->
-<div class="button-container button-container-right">
+<div class="background"></div>
+
+<!-- Button container -->
+<div class="button-container">
+  <button onclick="window.location.href='dashboard.jsp'">Back to Dashboard</button>
   <button class="logout-button" onclick="confirmLogout()">Log Out</button>
 </div>
 
@@ -226,6 +320,12 @@
   <!-- OFFBOARDING CHECKLIST -->
   <h2>OFFBOARDING CHECKLIST</h2>
   <table border="1">
+    <tr>
+      <th>Checklist Item</th>
+      <th>Date Completed</th>
+      <th>Remarks</th>
+      <th>Check</th>
+    </tr>
     <tr>
       <td style="text-align: center;">Certificate of Employment</td>
       <td style="text-align: center;"><label for="certificateEmploymentDateCompleted"></label><input type="date" id="certificateEmploymentDateCompleted" name="certificateEmploymentDateCompleted" disabled></td>
@@ -401,6 +501,10 @@
     // Event listener for the "Submit" button
     document.getElementById("submitButton").addEventListener("click", handleSubmitClick);
   </script>
+
+  <div class="bottom-line">
+    Pixelated Games Inc.
+  </div>
 
 </form>
 </body>

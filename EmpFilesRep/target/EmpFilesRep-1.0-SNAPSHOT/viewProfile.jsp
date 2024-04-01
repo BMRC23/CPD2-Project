@@ -15,7 +15,69 @@
 <head>
     <title>Employee Records and File Repository/View Profile</title>
     <style>
-        /* Center align the form */
+        @font-face {
+            font-family: 'Pixeloid Sans Bold';
+            src: url('fonts/PixeloidSansBold-PKnYd.ttf') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'Pixeloid Sans';
+            src: url('fonts/PixeloidSans-mLxMm.ttf') format('truetype');
+        }
+
+        body {
+            font-family: 'Pixeloid Sans', sans-serif;
+            background-color: #000040;
+            color: black;
+            margin: 0;
+            padding: 0;
+        }
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('images/employeeGraphic.jpg');
+            background-size: 80%;
+            background-position: center;
+            background-attachment: fixed;
+            filter: blur(20px);
+            z-index: -1;
+        }
+
+        .top-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #000040;
+            padding: 3vh 0;
+            font-family: 'Pixeloid Sans Bold', sans-serif;
+            font-size: 3vh;
+            color: goldenrod;
+            text-align: center;
+            border-bottom: darkgoldenrod 4px solid;
+            margin: 0;
+            text-transform: uppercase;
+            text-shadow: -0.1vh 0 white, 0 0.1vh white, 0.1vh 0 white, 0 -0.1vh white;
+        }
+
+        .bottom-line {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #000040;
+            padding: 3vh 0;
+            font-family: 'Pixeloid Sans Bold', sans-serif;
+            font-size: 2vh;
+            color: goldenrod;
+            text-align: center;
+            border-top: darkgoldenrod 4px solid;
+            text-shadow: -0.05vh 0 white, 0 0.05vh white, 0.05vh 0 white, 0 -0.05vh white;
+        }
+
         form {
             width: 50%;
             margin: 0 auto;
@@ -30,42 +92,92 @@
             display: block;
             margin-bottom: 5px;
         }
-        input[type="text"], input[type="submit"], input[type="checkbox"] {
+        input[type="text"], input[type="checkbox"] {
             width: calc(100% - 20px);
             padding: 5px;
             margin-bottom: 10px;
             font-size: 14px; /* Adjust font size */
         }
+        input[type="submit"] {
+            display: flex;
+            background-color: dodgerblue;
+            color: black;
+            padding: 0.5vh 0.5vw;
+            border-radius: 1vh; /* Adjust border radius based on viewport height */
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-family: 'Pixeloid Sans', sans-serif;
+            font-size: 0.8vw;
+            margin-bottom: 12vh; /* Increased bottom margin */
+            z-index: 1; /* Ensure button is visible */
+            width: calc(100% - 20px);
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+        }
+        input[type="submit"]:hover {
+            background-color: #000040;
+            color: goldenrod;
+        }
         .button-container {
-            text-align: left;
-            margin-bottom: 10px;
+            display: flex;
+            justify-content: flex-start;
+            margin-top: 10vh; /* Increased top margin */
+            z-index: 1; /* Ensure buttons are visible */
+            padding: 0 20px;
         }
-        .button-container-left {
-            float: left;
+        .logout-button {
+            margin-left: auto;
         }
-        .button-container-right {
-            float: right;
+        button{
+            background-color: dodgerblue;
+            color: black;
+            padding: 0.5vh 0.5vw;
+            border-radius: 1vh; /* Adjust border radius based on viewport height */
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-family: 'Pixeloid Sans', sans-serif;
+            font-size: 0.8vw;
         }
-        .button-container button {
-            margin-right: 10px;
-            margin-bottom: 10px;
+        button:hover:not(:disabled) {
+            background-color: #000040;
+            color: goldenrod;
+        }
+        button:disabled {
+            background-color: lightgray;
+            color: black;
+            padding: 0.5vh 0.5vw;
+            border-radius: 1vh; /* Adjust border radius based on viewport height */
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-family: 'Pixeloid Sans', sans-serif;
+            font-size: 0.8vw;
         }
         table {
             width: 100%;
+            background-color: white;
+        }
+        .space {
+            display: flex;
+            margin-bottom: 12vh
         }
     </style>
 </head>
 <body>
 
-<h1>View Profile</h1>
-<hr style="border-top: 4px solid black;">
+<<div class="top-line">
+    View Profile
+</div>
+
+<div class="background"></div>
 
 <!-- Button container for Back to Dashboard, Toggle Editing, Delete Profile, and Back To Resign Dashboard-->
-<div class="button-container button-container-left">
+<div class="button-container">
     <button onclick="window.location.href='dashboard.jsp'">Back to Dashboard</button>
     <button type="button" id="toggleEditing" name="toggleEditing" onclick="toggleAllFields()">Toggle Editing</button>
     <button type="button" onclick="deleteProfile()">Delete Profile</button>
     <button id="backToResignDashboard" style="display: none;" onclick="window.location.href='resigndashboard.jsp'">Go to Resigned Employees Dashboard</button>
+    <button class="logout-button" onclick="confirmLogout()">Log Out</button>
 </div>
 
 <script>
@@ -75,12 +187,6 @@
         document.getElementById("backToResignDashboard").style.display = "block"; // Display the button
     }
 </script>
-
-
-<!-- Button container for Log Out -->
-<div class="button-container button-container-right">
-    <button class="logout-button" onclick="confirmLogout()">Log Out</button>
-</div>
 
 <form id="deleteProfileForm" action="deleteProfile" method="post">
     <input type="hidden" id="employeeId" name="employeeId" value="<%= employee.getId() %>">
@@ -417,6 +523,7 @@
     <hr style="border-top: 2px solid black;">
     <br>
 
+    <div class="space"></div>
 
     <!-- Hidden input field for employee ID -->
     <input type="hidden" name="id" value="<%= employee.getId() %>">
@@ -470,6 +577,10 @@
             // Toggle the visibility of the "Save Changes" button
             let saveChangesButton = document.getElementById("saveChangesButton");
             saveChangesButton.style.display = saveChangesButton.style.display === "none" ? "block" : "none";
+
+            // Toggle the visibility of the div with id "spaceDiv"
+            let spaceDiv = document.getElementsByClassName("space")[0];
+            spaceDiv.style.display = saveChangesButton.style.display === "block" ? "none" : "block";
         }
     </script>
 
@@ -566,6 +677,10 @@
         // Event listener for the "Save Changes" button
         document.getElementById("saveChangesButton").addEventListener("click", handleSaveChangesClick);
     </script>
+
+    <div class="bottom-line">
+        Pixelated Games Inc.
+    </div>
 
 </form>
 </body>

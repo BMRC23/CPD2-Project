@@ -3,30 +3,120 @@
 <head>
     <title>Employee Records and File Repository/Resigned Employees Dashboard</title>
     <style>
+        @font-face {
+            font-family: 'Pixeloid Sans Bold';
+            src: url('fonts/PixeloidSansBold-PKnYd.ttf') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'Pixeloid Sans';
+            src: url('fonts/PixeloidSans-mLxMm.ttf') format('truetype');
+        }
+
+        body {
+            font-family: 'Pixeloid Sans', sans-serif;
+            background-color: #000040;
+            color: black;
+            margin: 0;
+            padding: 0;
+        }
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('images/companyLogo.png');
+            background-size: cover;
+            background-position: center;
+            filter: blur(50px);
+            z-index: -1;
+        }
+
         table {
             border-collapse: collapse;
             width: 80%;
-            margin: 20px auto;
+            margin: 2vh auto; /* Increased top and bottom margin */
+            background-color: white;
+            border: 2px solid black;
         }
-        th, td {
+        .top-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #000040;
+            padding: 3vh 0;
+            font-family: 'Pixeloid Sans Bold', sans-serif;
+            font-size: 3vh;
+            color: goldenrod;
+            text-align: center;
+            border-bottom: darkgoldenrod 4px solid;
+            margin: 0;
+            text-transform: uppercase;
+            text-shadow: -0.1vh 0 white, 0 0.1vh white, 0.1vh 0 white, 0 -0.1vh white;
+        }
+        th {
             border: 1px solid black;
             padding: 8px;
-            text-align: left;
+            color: dodgerblue;
+            text-align: center;
+            font-weight: bold;
         }
-        h1 {
+
+        td {
+            border: 1px solid black;
+            padding: 8px;
             text-align: center;
         }
+        .button-container {
+            display: flex;
+            justify-content: flex-start;
+            margin-top: 12vh; /* Increased top margin */
+            z-index: 1; /* Ensure buttons are visible */
+        }
         .logout-button {
-            float: right;
-            margin-right: 20px;
+            margin-left: auto;
+        }
+        .bottom-line {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #000040;
+            padding: 3vh 0;
+            font-family: 'Pixeloid Sans Bold', sans-serif;
+            font-size: 2vh;
+            color: goldenrod;
+            text-align: center;
+            border-top: darkgoldenrod 4px solid;
+            text-shadow: -0.05vh 0 white, 0 0.05vh white, 0.05vh 0 white, 0 -0.05vh white;
+        }
+        button {
+            background-color: dodgerblue;
+            color: black;
+            margin: 0.5vw;
+            padding: 0.5vh 0.5vw;
+            border-radius: 1vh; /* Adjust border radius based on viewport height */
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-family: 'Pixeloid Sans', sans-serif;
+            font-size: 0.8vw;
+        }
+        button:hover {
+            background-color: #000040;
+            color: goldenrod;
         }
     </style>
 </head>
 <body>
-<h1>Resigned Employees Dashboard</h1>
-<hr style="border-top: 4px solid black;">
+<div class="top-line">
+    Resigned Employees Dashboard
+</div>
 
-<!-- Button container for Create Profile and Log Out buttons -->
+<div class="background"></div>
+
+<!-- Button container for Back to Dashboard and Log Out buttons -->
 <div class="button-container">
     <button onclick="window.location.href='dashboard.jsp'">Back to Dashboard</button>
     <button class="logout-button" onclick="confirmLogout()">Log Out</button>
@@ -61,6 +151,10 @@
         }
     }
 </script>
+
+<div class="bottom-line">
+    Pixelated Games Inc.
+</div>
 
 </body>
 </html>
