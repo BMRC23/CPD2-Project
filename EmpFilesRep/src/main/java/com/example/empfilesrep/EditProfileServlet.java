@@ -17,9 +17,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Servlet implementation class for editing a profile.
+ * This servlet handles the POST request to edit a profile.
+ */
 @WebServlet(name = "EditProfileServlet", value = "/editProfile")
 @MultipartConfig
 public class EditProfileServlet extends HttpServlet {
+
+    /**
+     * Handles the HTTP POST method used to edit a profile.
+     * This method retrieves the form parameters from the request, updates the employee's data in the database,
+     * and redirects the client to the previous page or a default page if the previous page is not available.
+     * @param request  the HttpServletRequest object that contains the request the client made of the servlet
+     * @param response the HttpServletResponse object that contains the response the servlet sends to the client
+     * @throws ServletException if the request for the POST could not be handled
+     * @throws IOException if an input or output error is detected when the servlet handles the POST request
+     */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         // Retrieve required form parameters
@@ -100,10 +114,8 @@ public class EditProfileServlet extends HttpServlet {
             }
         }
 
-        // Database connection parameters
-        String url = "jdbc:mysql://localhost:3306/employeelist";
-        String username = "root";
-        String password = "LBYCPD2project";
+        // Establish Database connection
+        DatabaseConnection db = new DatabaseConnection();
 
         // SQL query to update employee data in the database
         String sqlEmployee = "UPDATE employee SET firstName=?, middleName=?, lastName=?, jobPosition=?, dateHired=?, address=?, contactNumber=?, birthdate=?, sss=?, tin=?, philHealth=?, pagIbig=?, emergencyContactName=?, emergencyContactNumber=?, employeeContractDateCompleted=?, " +
@@ -115,7 +127,7 @@ public class EditProfileServlet extends HttpServlet {
 
         String sqlFile = "INSERT INTO EmployeeFiles (employee_id, filename, filetype, filedata) VALUES (?, ?, ?, ?)";
 
-        try (Connection conn = DriverManager.getConnection(url, username, password);
+        try (Connection conn = db.getConnection();
              PreparedStatement stmtEmployee = conn.prepareStatement(sqlEmployee);
              PreparedStatement stmtFile = conn.prepareStatement(sqlFile)) {
             stmtEmployee.setString(1, firstName);
@@ -205,6 +217,12 @@ public class EditProfileServlet extends HttpServlet {
 
     }
 
+    /**
+     * Parses a date string into a LocalDate object.
+     * This method returns null if the date string is null, empty, or cannot be parsed into a LocalDate.
+     * @param dateString the date string to parse
+     * @return the parsed LocalDate object, or null if the date string is null, empty, or cannot be parsed
+     */
     private LocalDate parseDate(String dateString) {
         if (dateString != null && !dateString.isEmpty()) {
             try {

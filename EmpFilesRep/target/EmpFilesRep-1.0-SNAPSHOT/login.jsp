@@ -29,10 +29,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('images/background.jpg');
+            background-color: white;
             background-size: cover;
             background-position: center;
-            filter: blur(20px);
             z-index: -1;
         }
         form {

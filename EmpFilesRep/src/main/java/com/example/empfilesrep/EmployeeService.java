@@ -7,29 +7,27 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.time.LocalDate;
 
+/**
+ * This class provides services related to Employee operations.
+ * It contains methods to fetch current employees, resigned employees, all files of an employee and a specific employee by ID from the database.
+ */
 public class EmployeeService {
     private static final Logger LOGGER = Logger.getLogger(EmployeeService.class.getName());
 
-    public static List<Employee> getAllEmployeesFromDatabase() {
+    /**
+     * Fetches the list of current employees from the database.
+     * @return List of current employees.
+     */
+    public static List<Employee> getCurrentEmployeesFromDatabase() {
         List<Employee> employees = new ArrayList<>();
 
-        // Load the MySQL JDBC driver
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            LOGGER.log(Level.SEVERE, "MySQL JDBC Driver not found", e);
-            return employees;
-        }
-
-        // Database connection parameters
-        String url = "jdbc:mysql://localhost:3306/employeelist";
-        String username = "root";
-        String password = "LBYCPD2project";
+        // Establish Database connection
+        DatabaseConnection db = new DatabaseConnection();
 
         // SQL query to select all employees
-        String sql = "SELECT * FROM employee";
+        String sql = "SELECT * FROM employee WHERE resigned = false";
 
-        try (Connection conn = DriverManager.getConnection(url, username, password);
+        try (Connection conn = db.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
@@ -104,27 +102,21 @@ public class EmployeeService {
         return employees;
     }
 
-
+    /**
+     * Fetches all files of a specific employee from the database.
+     * @param id The ID of the employee.
+     * @return List of files of the employee.
+     */
     public static List<EmployeeFile> getAllEmployeeFilesFromDatabase(int id) {
         List<EmployeeFile> employeeFiles = new ArrayList<>();
 
-        // Load the MySQL JDBC driver
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            LOGGER.log(Level.SEVERE, "MySQL JDBC Driver not found", e);
-            return employeeFiles;
-        }
-
-        // Database connection parameters
-        String url = "jdbc:mysql://localhost:3306/employeelist";
-        String username = "root";
-        String password = "LBYCPD2project";
+        // Establish Database connection
+        DatabaseConnection db = new DatabaseConnection();
 
         // SQL query to select all employee files
         String sql = "SELECT * FROM employeefiles WHERE employee_id = ?";
 
-        try (Connection conn = DriverManager.getConnection(url, username, password);
+        try (Connection conn = db.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, id);
@@ -148,25 +140,20 @@ public class EmployeeService {
         return employeeFiles;
     }
 
+    /**
+     * Fetches the list of resigned employees from the database.
+     * @return List of resigned employees.
+     */
     public static List<Employee> getResignedEmployeesFromDatabase() {
         List<Employee> resignedEmployees = new ArrayList<>();
 
-        // Load the MySQL JDBC driver
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            LOGGER.log(Level.SEVERE, "MySQL JDBC Driver not found", e);
-            return resignedEmployees;
-        }
-        // Database connection parameters
-        String url = "jdbc:mysql://localhost:3306/employeelist";
-        String username = "root";
-        String password = "LBYCPD2project";
+        // Establish Database connection
+        DatabaseConnection db = new DatabaseConnection();
 
         // SQL query to select resigned employees
         String sql = "SELECT * FROM employee WHERE resigned = true";
 
-        try (Connection conn = DriverManager.getConnection(url, username, password);
+        try (Connection conn = db.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
@@ -240,27 +227,22 @@ public class EmployeeService {
 
         return resignedEmployees;
     }
-    
+
+    /**
+     * Fetches a specific employee by ID from the database.
+     * @param employeeId The ID of the employee.
+     * @return The employee object.
+     */
     public static Employee getEmployeeById(int employeeId) {
         Employee employee = null;
 
-        // Load the MySQL JDBC driver
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            LOGGER.log(Level.SEVERE, "MySQL JDBC Driver not found", e);
-            return null;
-        }
-
-        // Database connection parameters
-        String url = "jdbc:mysql://localhost:3306/employeelist";
-        String username = "root";
-        String password = "LBYCPD2project";
+        // Establish Database connection
+        DatabaseConnection db = new DatabaseConnection();
 
         // SQL query to select an employee by ID
         String sql = "SELECT * FROM employee WHERE id = ?";
 
-        try (Connection conn = DriverManager.getConnection(url, username, password);
+        try (Connection conn = db.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, employeeId);

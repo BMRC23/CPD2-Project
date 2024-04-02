@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <name>Employee Files Repositroy</name>
+  <name>Employee Files Repository</name>
   <description>A website application intended for the HR department of Pixelated Games Inc.</description>
 
   <groupId>dlsu.lbycpd2</groupId>
@@ -41,7 +41,12 @@
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
-      <version>8.0.28</version> <!-- Replace {version} with the desired version -->
+      <version>8.0.28</version>
+    </dependency>
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <version>1.4.200</version>
     </dependency>
   </dependencies>
 
@@ -52,5 +57,12 @@
         <artifactId>maven-war-plugin</artifactId>
         <version>3.3.2</version>
       </plugin>                </plugins>
+
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
   </build>
 </project>

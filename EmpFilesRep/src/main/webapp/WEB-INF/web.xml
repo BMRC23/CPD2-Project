@@ -22,4 +22,76 @@
         <url-pattern>/editProfile</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>ViewProfileServlet</servlet-name>
+        <servlet-class>com.example.empfilesrep.ViewProfileServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ViewProfileServlet</servlet-name>
+        <url-pattern>/viewProfile</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CreateProfileServlet</servlet-name>
+        <servlet-class>com.example.empfilesrep.CreateProfileServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CreateProfileServlet</servlet-name>
+        <url-pattern>/createProfile</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DashboardServlet</servlet-name>
+        <servlet-class>com.example.empfilesrep.DashboardServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DashboardServlet</servlet-name>
+        <url-pattern>/dashboard</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DeleteFileServlet</servlet-name>
+        <servlet-class>com.example.empfilesrep.DeleteFileServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DeleteFileServlet</servlet-name>
+        <url-pattern>/deleteFile</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DownloadFileServlet</servlet-name>
+        <servlet-class>com.example.empfilesrep.DownloadFileServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DownloadFileServlet</servlet-name>
+        <url-pattern>/downloadFile</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DeleteProfileServlet</servlet-name>
+        <servlet-class>com.example.empfilesrep.DeleteProfileServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DeleteProfileServlet</servlet-name>
+        <url-pattern>/deleteProfile</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>LoginServlet</servlet-name>
+        <servlet-class>com.example.empfilesrep.LoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LoginServlet</servlet-name>
+        <url-pattern>/login</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ResignDashboardServlet</servlet-name>
+        <servlet-class>com.example.empfilesrep.ResignDashboardServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ResignDashboardServlet</servlet-name>
+        <url-pattern>/resigndashboard</url-pattern>
+    </servlet-mapping>
+
 </web-app>

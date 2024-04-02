@@ -18,9 +18,22 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Servlet implementation class for creating a new employee profile.
+ * This servlet handles the POST request to create a new employee profile and the GET request to display the form.
+ */
 @WebServlet(name = "CreateProfileServlet", value = "/createProfile")
 @MultipartConfig
 public class CreateProfileServlet extends HttpServlet {
+
+    /**
+     * Handles the HTTP POST method used to create a new employee profile.
+     * This method retrieves form parameters, establishes a database connection, and inserts the new employee data into the database.
+     * @param request  the HttpServletRequest object that contains the request the client made of the servlet
+     * @param response the HttpServletResponse object that contains the response the servlet sends to the client
+     * @throws IOException if an input or output error is detected when the servlet handles the POST request
+     * @throws ServletException if the request for the POST could not be handled
+     */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         // Retrieve required form parameters
         String firstName = request.getParameter("firstName");
@@ -104,10 +117,8 @@ public class CreateProfileServlet extends HttpServlet {
         }
 
 
-        // Database connection parameters
-        String url = "jdbc:mysql://localhost:3306/employeelist";
-        String username = "root";
-        String password = "LBYCPD2project";
+        // Establish database connection
+       DatabaseConnection db = new DatabaseConnection();
 
         // SQL query to insert employee data into the database
         String sqlEmployee = "INSERT INTO employee (firstName, middleName, lastName, jobPosition, dateHired, address, contactNumber, birthdate, sss, tin, philHealth, pagIbig, emergencyContactName, emergencyContactNumber, employeeContractDateCompleted, " +
@@ -118,7 +129,7 @@ public class CreateProfileServlet extends HttpServlet {
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String sqlFile = "INSERT INTO EmployeeFiles (employee_id, filename, filetype, filedata) VALUES (?, ?, ?, ?)";
 
-        try (Connection conn = DriverManager.getConnection(url, username, password);
+        try (Connection conn = db.getConnection();
              PreparedStatement stmtEmployee = conn.prepareStatement(sqlEmployee, Statement.RETURN_GENERATED_KEYS);
              PreparedStatement stmtFile = conn.prepareStatement(sqlFile)) {
 
@@ -178,7 +189,6 @@ public class CreateProfileServlet extends HttpServlet {
             stmtEmployee.setBoolean(53, quitclaimFinalPay);
             stmtEmployee.setBoolean(54, knowledgeTransferSheet);
 
-
             int affectedRows = stmtEmployee.executeUpdate();
             if (affectedRows == 0) {
                 throw new SQLException("Creating employee failed, no rows affected.");
@@ -211,6 +221,14 @@ public class CreateProfileServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Handles the HTTP GET method used to display the form for creating a new employee profile.
+     * This method retrieves the list of employees from the database and forwards the request to the JSP page to display the form.
+     * @param request  the HttpServletRequest object that contains the request the client made of the servlet
+     * @param response the HttpServletResponse object that contains the response the servlet sends to the client
+     * @throws ServletException if the request for the GET could not be handled
+     * @throws IOException if an input or output error is detected when the servlet handles the GET request
+     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String filter = request.getParameter("filter");
         List<Employee> employees;
@@ -219,12 +237,18 @@ public class CreateProfileServlet extends HttpServlet {
         if ("resigned".equals(filter)) {
             employees = EmployeeService.getResignedEmployeesFromDatabase();
         } else {
-            employees = EmployeeService.getAllEmployeesFromDatabase();
+            employees = EmployeeService.getCurrentEmployeesFromDatabase();
         }
         request.setAttribute("employees", employees);
         request.getRequestDispatcher("createProfile.jsp").forward(request, response);
     }
 
+    /**
+     * Parses a date string into a LocalDate object.
+     * This method returns null if the date string is null or empty, or if the date string cannot be parsed into a LocalDate object.
+     * @param dateString the date string to parse
+     * @return the parsed LocalDate object, or null if the date string is null or empty, or if the date string cannot be parsed
+     */
     private LocalDate parseDate(String dateString) {
         if (dateString != null && !dateString.isEmpty()) {
             try {

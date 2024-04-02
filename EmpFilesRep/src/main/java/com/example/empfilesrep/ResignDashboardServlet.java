@@ -1,14 +1,31 @@
 package com.example.empfilesrep;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Servlet implementation class for displaying the resign dashboard.
+ * This servlet handles the GET request to display a list of resigned employees.
+ */
 @WebServlet(name = "ResignDashboardServlet", value = "/resigndashboard")
 public class ResignDashboardServlet extends HttpServlet {
+
+    /**
+     * Handles the HTTP GET method used to display the resign dashboard.
+     * This method retrieves the list of resigned employees from the database, sets the list as an attribute in the request,
+     * and forwards the request to the resign dashboard page for rendering.
+     * If an error occurs during the process, an alert message is sent back to the client.
+     * @param request  the HttpServletRequest object that contains the request the client made of the servlet
+     * @param response the HttpServletResponse object that contains the response the servlet sends to the client
+     * @throws ServletException if the request for the GET could not be handled
+     * @throws IOException if an input or output error is detected when the servlet handles the GET request
+     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         try {
             // Retrieve only resigned employees from the database

@@ -26,11 +26,10 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background-image: url('images/employeeGraphic.jpg');
+      background-color: white;
       background-size: 80%;
       background-position: center;
       background-attachment: fixed;
-      filter: blur(20px);
       z-index: -1;
     }
 

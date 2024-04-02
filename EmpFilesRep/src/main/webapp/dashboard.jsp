@@ -26,10 +26,9 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background-image: url('images/companyLogo.png');
+      background-color: white;
       background-size: cover;
       background-position: center;
-      filter: blur(50px);
       z-index: -1;
     }
 
@@ -132,7 +131,7 @@
     <th>Date Hired</th>
     <th>Action</th>
   </tr>
-  <% for (com.example.empfilesrep.Employee employee : com.example.empfilesrep.EmployeeService.getAllEmployeesFromDatabase()) { %>
+  <% for (com.example.empfilesrep.Employee employee : com.example.empfilesrep.EmployeeService.getCurrentEmployeesFromDatabase()) { %>
   <tr>
     <td><%= employee.getFirstName() %></td>
     <td><%= employee.getMiddleName() %></td>
