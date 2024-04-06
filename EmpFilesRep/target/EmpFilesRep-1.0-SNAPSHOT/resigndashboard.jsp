@@ -21,7 +21,7 @@
             padding: 0;
         }
         .background {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
@@ -33,11 +33,13 @@
         }
 
         table {
+            position: relative;
             border-collapse: collapse;
             width: 80%;
-            margin: 2vh auto; /* Increased top and bottom margin */
             background-color: white;
             border: 2px solid black;
+            z-index: 1;
+            margin: 15vh auto 2vh;
         }
         .top-line {
             position: fixed;
@@ -68,14 +70,10 @@
             padding: 8px;
             text-align: center;
         }
-        .button-container {
-            display: flex;
-            justify-content: flex-start;
-            margin-top: 12vh; /* Increased top margin */
-            z-index: 1; /* Ensure buttons are visible */
-        }
         .logout-button {
-            margin-left: auto;
+            position: absolute;
+            bottom: 0;
+            right: 0;
         }
         .bottom-line {
             position: fixed;
@@ -106,20 +104,93 @@
             background-color: #000040;
             color: goldenrod;
         }
+        /* Style for the navigation menu button */
+        .nav-button {
+            position: fixed;
+            top: 2vh;
+            left: 2vh;
+            background-color: goldenrod;
+            color: black;
+            padding: 0.5vh 0.5vw;
+            border-radius: 1vh;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-family: 'Pixeloid Sans', sans-serif;
+            font-size: 0.8vw;
+            z-index: 1; /* Ensure button is visible */
+        }
+        .nav-button:hover {
+            background-color: darkgoldenrod;
+            color: black;
+        }
+
+        /* Style for the navigation menu */
+        .nav-menu {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            overflow-x: hidden;
+            transition: 0.5s;
+            z-index: 2;
+            padding-top: 7vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #000040;
+        }
+        .nav-menu button {
+            background-color: dodgerblue;
+            color: black;
+            margin: 1vh 1vw;
+            padding: 0.5vh 0.5vw;
+            border-radius: 1vh;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-family: 'Pixeloid Sans', sans-serif;
+            font-size: 0.8vw;
+        }
+        .nav-menu button:not(.close-button) {
+            margin-top: 5px;
+        }
+        .nav-menu button:hover {
+            background-color: #000040;
+            color: goldenrod;
+        }
+        .nav-menu .close-button {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: goldenrod;
+            color: black;
+            padding: 0.5vh 0.5vw;
+            border-radius: 1vh;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-family: 'Pixeloid Sans', sans-serif;
+            font-size: 0.8vw;
+        }
+        .nav-menu .close-button:hover {
+            background-color: darkgoldenrod;
+            color: black;
+        }
     </style>
 </head>
 <body>
+<button class="nav-button" onclick="openNav()">Menu</button>
+
+<div id="navMenu" class="nav-menu">
+    <button class="close-button" onclick="closeNav()">Close</button>
+    <button onclick="window.location.href='dashboard.jsp'">Back to Dashboard</button>
+    <button class="logout-button" onclick="confirmLogout()">Log Out</button>
+</div>
+
 <div class="top-line">
     Resigned Employees Dashboard
 </div>
 
 <div class="background"></div>
-
-<!-- Button container for Back to Dashboard and Log Out buttons -->
-<div class="button-container">
-    <button onclick="window.location.href='dashboard.jsp'">Back to Dashboard</button>
-    <button class="logout-button" onclick="confirmLogout()">Log Out</button>
-</div>
 
 <table>
     <tr>
@@ -128,6 +199,7 @@
         <th>Last Name</th>
         <th>Job Position</th>
         <th>Date Hired</th>
+        <th>Status</th>
         <th>Action</th>
     </tr>
     <% for (com.example.empfilesrep.Employee employee : com.example.empfilesrep.EmployeeService.getResignedEmployeesFromDatabase()) { %>
@@ -137,12 +209,21 @@
         <td><%= employee.getLastName() %></td>
         <td><%= employee.getJobPosition() %></td>
         <td><%= employee.getDateHired() %></td>
+        <td><%= employee.getStatus() %></td>
         <td><a href="viewProfile?employeeId=<%= employee.getId() %>">View</a></td>
     </tr>
     <% } %>
 </table>
 
 <script>
+    function openNav() {
+        document.getElementById("navMenu").style.width = "25vh";
+    }
+
+    function closeNav() {
+        document.getElementById("navMenu").style.width = "0";
+    }
+
     function confirmLogout() {
         let confirmLogout = confirm("Are you sure you want to log out?");
         if (confirmLogout) {

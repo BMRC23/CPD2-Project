@@ -105,7 +105,7 @@
     <input type="password" id="password" name="password" required>
     <br><br>
 
-    <input type="submit" value="Login">
+    <input type="submit" value="Log In">
 </form>
 <div class="company-message">
     <img src="images/companyLogo.png" alt="Company Logo">

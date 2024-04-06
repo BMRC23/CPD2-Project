@@ -67,7 +67,7 @@
 
     form {
       width: 50%;
-      margin: 0 auto;
+      margin: 12vh auto 2vh;
       text-align: left;
     }
     /* Center align the headings */
@@ -106,15 +106,10 @@
       background-color: #000040;
       color: goldenrod;
     }
-    .button-container {
-      display: flex;
-      justify-content: flex-start;
-      margin-top: 12vh; /* Increased top margin */
-      z-index: 1; /* Ensure buttons are visible */
-      padding: 0 20px;
-    }
     .logout-button {
-      margin-left: auto;
+      position: absolute;
+      bottom: 0;
+      right: 0;
     }
     button{
       background-color: dodgerblue;
@@ -134,21 +129,93 @@
       width: 100%;
       background-color: white;
     }
+    /* Style for the navigation menu button */
+    .nav-button {
+      position: fixed;
+      top: 3vh;
+      left: 3vh;
+      background-color: goldenrod;
+      color: black;
+      padding: 0.5vh 0.5vw;
+      border-radius: 1vh;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      font-family: 'Pixeloid Sans', sans-serif;
+      font-size: 0.8vw;
+      z-index: 1; /* Ensure button is visible */
+    }
+    .nav-button:hover {
+      background-color: darkgoldenrod;
+      color: black;
+    }
+
+    /* Style for the navigation menu */
+    .nav-menu {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      overflow-x: hidden;
+      transition: 0.5s;
+      z-index: 2;
+      padding-top: 7vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #000040;
+    }
+    .nav-menu button {
+      background-color: dodgerblue;
+      color: black;
+      margin: 1vh 1vw;
+      padding: 0.5vh 0.5vw;
+      border-radius: 1vh;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      font-family: 'Pixeloid Sans', sans-serif;
+      font-size: 0.8vw;
+    }
+    .nav-menu button:not(.close-button) {
+      margin-top: 5px;
+    }
+    .nav-menu button:hover {
+      background-color: #000040;
+      color: goldenrod;
+    }
+    .nav-menu .close-button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background-color: goldenrod;
+      color: black;
+      padding: 0.5vh 0.5vw;
+      border-radius: 1vh;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      font-family: 'Pixeloid Sans', sans-serif;
+      font-size: 0.8vw;
+    }
+    .nav-menu .close-button:hover {
+      background-color: darkgoldenrod;
+      color: black;
+    }
   </style>
 </head>
 <body>
+<button class="nav-button" onclick="openNav()">Menu</button>
+
+<div id="navMenu" class="nav-menu">
+  <button class="close-button" onclick="closeNav()">Close</button>
+  <button onclick="window.location.href='dashboard.jsp'">Back to Dashboard</button>
+  <button class="logout-button" onclick="confirmLogout()">Log Out</button>
+</div>
 
 <div class="top-line">
   Create Profile
 </div>
 
 <div class="background"></div>
-
-<!-- Button container -->
-<div class="button-container">
-  <button onclick="window.location.href='dashboard.jsp'">Back to Dashboard</button>
-  <button class="logout-button" onclick="confirmLogout()">Log Out</button>
-</div>
 
 <form action="createProfile" method="post" enctype="multipart/form-data">
   <!-- EMPLOYEE DETAILS -->
@@ -467,6 +534,14 @@
       if (confirmLogout) {
         window.location.href = "login.jsp"; // Redirect to login page
       }
+    }
+    // Function to open navigation menu
+    function openNav() {
+      document.getElementById("navMenu").style.width = "25vh";
+    }
+    // Function to close navigation menu
+    function closeNav() {
+      document.getElementById("navMenu").style.width = "0";
     }
   </script>
 

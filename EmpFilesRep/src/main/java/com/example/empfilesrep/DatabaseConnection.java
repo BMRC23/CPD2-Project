@@ -8,10 +8,16 @@ import java.sql.Statement;
 import java.util.Properties;
 import java.io.InputStream;
 
+/**
+ * This class is responsible for establishing a connection to the database and creating the necessary tables if they do not exist.
+ */
 public class DatabaseConnection {
 
     private final Connection connection;
 
+    /**
+     * The constructor loads the database properties from a properties file, establishes a connection to the database, and creates the necessary tables.
+     */
     public DatabaseConnection() {
         try (InputStream input = getClass().getClassLoader().getResourceAsStream("db.properties")) {
             Properties prop = new Properties();
@@ -31,10 +37,17 @@ public class DatabaseConnection {
         }
     }
 
+    /**
+     * This method returns the established database connection.
+     * @return the established database connection.
+     */
     public Connection getConnection() {
         return connection;
     }
 
+    /**
+     * This method creates the necessary tables in the database if they do not exist.
+     */
     private void createDatabaseTables() {
         try (Statement stmt = connection.createStatement()) {
             String sql = "CREATE TABLE IF NOT EXISTS Employee " +

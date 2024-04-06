@@ -584,4 +584,20 @@ public class Employee {
 
     public void setEmployeeFiles(List<EmployeeFile> employeeFiles) {
     }
+
+    public String getStatus() {
+        if (sss == null || tin == null || philHealth == null || pagIbig == null || !employeeContract || !microsoftAccount || !issuedAssets || !requiredLicenses
+                || !trelloInvite || !teamsShifts || !enrolToPayroll || !certificateEmployment || !birForm2316 || !returnIssuedAssets || !quitclaimFinalPay || !knowledgeTransferSheet ||
+                employeeContractRemarks == null || employeeContractDateCompleted == null || microsoftAccountRemarks == null || microsoftAccountDateCompleted == null ||
+                issuedAssetsRemarks == null || issuedAssetsDateCompleted == null || requiredLicensesRemarks == null || requiredLicensesDateCompleted == null ||
+                trelloInviteRemarks == null || trelloInviteDateCompleted == null || teamsShiftsRemarks == null || teamsShiftsDateCompleted == null ||
+                enrolToPayrollRemarks == null || enrolToPayrollDateCompleted == null || certificateEmploymentRemarks == null || certificateEmploymentDateCompleted == null ||
+                birForm2316Remarks == null || birForm2316DateCompleted == null || returnIssuedAssetsRemarks == null || returnIssuedAssetsDateCompleted == null ||
+                quitclaimFinalPayRemarks == null || quitclaimFinalPayDateCompleted == null || knowledgeTransferSheetRemarks == null || knowledgeTransferSheetDateCompleted == null ||
+                (isResigned && (resignationDate == null || lastDay == null || finalPayReleaseDate == null))) {
+            return "Partially Complete Details";
+        } else {
+            return "Complete Details";
+        }
+    }
 }
