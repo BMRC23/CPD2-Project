@@ -7,7 +7,9 @@
     // Retrieve employee details from the database
     Employee employee = (Employee) request.getAttribute("employee");
     @SuppressWarnings("unchecked") // Suppress warning for this line
-    List<EmployeeFile> files = (List<EmployeeFile>) request.getAttribute("files");
+    List<EmployeeFile> additionalFiles = (List<EmployeeFile>) request.getAttribute("additionalFiles");
+    @SuppressWarnings("unchecked") // Suppress warning for this line
+    List<EmployeeFile> checklistFiles = (List<EmployeeFile>) request.getAttribute("checklistFiles");
 
 %>
 
@@ -188,7 +190,7 @@
             padding-top: 7vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: flex-start;
             background-color: #000040;
         }
         .nav-menu button {
@@ -201,6 +203,7 @@
             transition: background-color 0.3s;
             font-family: 'Pixeloid Sans', sans-serif;
             font-size: 0.8vw;
+            text-align: left;
         }
         .nav-menu button:not(.close-button) {
             margin-top: 5px;
@@ -339,23 +342,53 @@
 
     <!-- Script to enable editing of columns when checkbox is checked -->
     <script>
-        function enableEditing(checkbox, dateId, remarksId) {
+        function enableEditing(checkbox, dateId, remarksId, fileId) {
             let dateField = document.getElementById(dateId);
             let remarksField = document.getElementById(remarksId);
+            let fileField = document.getElementById(fileId);
             let booleanValue = checkbox.checked;
+            let fileExists = checkbox.getAttribute('data-file-exists') === 'true';
 
             if (booleanValue) {
                 dateField.disabled = false;
                 remarksField.disabled = false;
+                fileField.disabled = false;
             } else {
-                dateField.disabled = true;
-                remarksField.disabled = true;
-                dateField.value = ''; // Clear the date field
-                remarksField.value = ''; // Clear the remarks field
+                // Check if a file is uploaded for this checkbox
+                if (fileExists) {
+                    // If a file is uploaded, alert the user to delete the file first
+                    alert('Please delete the file before unchecking the checkbox.');
+                    // Keep the checkbox checked
+                    checkbox.checked = true;
+                    return;
+                } else {
+                    dateField.disabled = true;
+                    remarksField.disabled = true;
+                    fileField.disabled = true;
+                    dateField.value = '';
+                    remarksField.value = '';
+                    fileField.value = '';
+                }
             }
 
             // Set the corresponding boolean value
             document.getElementById(checkbox.id).value = booleanValue.toString(); // Set boolean value as string
+        }
+    </script>
+
+    <!-- Function to set isChecklistFile parameter -->
+    <script>
+        function setChecklistFileParameter(fileInputId, isChecklistFileId) {
+            let fileInput = document.getElementById(fileInputId);
+            let isChecklistFileInput = document.getElementById(isChecklistFileId);
+
+            if (fileInput.files.length > 0) {
+                // If a file is selected, set isChecklistFile to true
+                isChecklistFileInput.value = "true";
+            } else {
+                // If no file is selected, set isChecklistFile to false
+                isChecklistFileInput.value = "false";
+            }
         }
     </script>
 
@@ -366,6 +399,7 @@
         <!-- Table headers -->
         <tr>
             <th>Checklist Item</th>
+            <th>File</th>
             <th>Date Completed</th>
             <th>Remarks</th>
             <th>Check</th>
@@ -373,45 +407,150 @@
         <!-- Table rows -->
         <tr>
             <td style="text-align: center;">Employee Contract</td>
+            <td style="text-align: center;">
+                <% boolean fileExists = false; %>
+                <% for (EmployeeFile file : checklistFiles) {
+                    if ("Employee Contract".equals(file.getChecklistName())) {
+                        fileExists = true; %>
+                        <a href="downloadFile?fileId=<%= file.getId() %>"><%= file.getFilename() %></a>
+                        <button onclick="deleteFile(<%= file.getId() %>)" disabled >Delete</button>
+                    <% }
+                }
+                if (!fileExists) { %>
+                    <input type="file" id="employeeContractFile" name="employeeContractFile" disabled onchange="setChecklistFileParameter('employeeContractFile', 'employeeContractIsChecklistFile')">
+                    <input type="hidden" id="employeeContractIsChecklistFile" name="employeeContractFile_isChecklistFile" value="false">
+                    <input type="hidden" name="employeeContractFile_checklistName" value="Employee Contract">
+                <% } %>
+            </td>
             <td style="text-align: center;"><label for="employeeContractDateCompleted"></label><input type="date" id="employeeContractDateCompleted" name="employeeContractDateCompleted" value="<%= employee.getEmployeeContractDateCompleted() %>" disabled></td>
             <td style="text-align: center;"><label for="employeeContractRemarks"></label><input type="text" id="employeeContractRemarks" name="employeeContractRemarks" value="<%= employee.getEmployeeContractRemarks() != null ? employee.getEmployeeContractRemarks() : "" %>" disabled></td>
-            <td style="text-align: center;"><label for="employeeContract"></label><input type="checkbox" id="employeeContract" name="employeeContract" data-id="date remarks" data-date-id="employeeContractDateCompleted" data-remarks-id="employeeContractRemarks" onclick="enableEditing(this, 'employeeContractDateCompleted', 'employeeContractRemarks')" <% if (employee.isEmployeeContract()) { %> checked <% } %> disabled></td>
+            <td style="text-align: center;"><label for="employeeContract"></label><input type="checkbox" id="employeeContract" name="employeeContract" data-id="date remarks" data-date-id="employeeContractDateCompleted" data-remarks-id="employeeContractRemarks" data-file-exists="<%= fileExists %>" onclick="enableEditing(this, 'employeeContractDateCompleted', 'employeeContractRemarks', 'employeeContractFile')" <% if (employee.isEmployeeContract()) { %> checked <% } %> disabled></td>
         </tr>
         <tr>
             <td style="text-align: center;">Microsoft Account / Email Address</td>
+            <td style="text-align: center;">
+                <% fileExists = false; %>
+                <% for (EmployeeFile file : checklistFiles) {
+                    if ("Microsoft Account / Email Address".equals(file.getChecklistName())) {
+                        fileExists = true; %>
+                        <a href="downloadFile?fileId=<%= file.getId() %>"><%= file.getFilename() %></a>
+                        <button onclick="deleteFile(<%= file.getId() %>)" disabled >Delete</button>
+                    <% }
+                }
+                if (!fileExists) { %>
+                    <input type="file" id="microsoftAccountFile" name="microsoftAccountFile" disabled onchange="setChecklistFileParameter('microsoftAccountFile', 'microsoftAccountIsChecklistFile')">
+                    <input type="hidden" id="microsoftAccountIsChecklistFile" name="microsoftAccountFile_isChecklistFile" value="false">
+                    <input type="hidden" name="microsoftAccountFile_checklistName" value="Microsoft Account / Email Address">
+                <% } %>
+            </td>
             <td style="text-align: center;"><label for="microsoftAccountDateCompleted"></label><input type="date" id="microsoftAccountDateCompleted" name="microsoftAccountDateCompleted" value="<%= employee.getMicrosoftAccountDateCompleted() %>" disabled></td>
             <td style="text-align: center;"><label for="microsoftAccountRemarks"></label><input type="text" id="microsoftAccountRemarks" name="microsoftAccountRemarks" value="<%= employee.getMicrosoftAccountRemarks() != null ? employee.getMicrosoftAccountRemarks() : "" %>" disabled></td>
-            <td style="text-align: center;"><label for="microsoftAccount"></label><input type="checkbox" id="microsoftAccount" name="microsoftAccount" data-id="date remarks" data-date-id="microsoftAccountDateCompleted" data-remarks-id="microsoftAccountRemarks" onclick="enableEditing(this, 'microsoftAccountDateCompleted', 'microsoftAccountRemarks')" <% if (employee.isMicrosoftAccount()) { %> checked <% } %> disabled></td>
+            <td style="text-align: center;"><label for="microsoftAccount"></label><input type="checkbox" id="microsoftAccount" name="microsoftAccount" data-id="date remarks" data-date-id="microsoftAccountDateCompleted" data-remarks-id="microsoftAccountRemarks" data-file-exists="<%= fileExists %>" onclick="enableEditing(this, 'microsoftAccountDateCompleted', 'microsoftAccountRemarks', 'microsoftAccountFile')" <% if (employee.isMicrosoftAccount()) { %> checked <% } %> disabled></td>
         </tr>
         <tr>
             <td style="text-align: center;">Issued Assets</td>
+            <td style="text-align: center;">
+                <% fileExists = false; %>
+                <% for (EmployeeFile file : checklistFiles) {
+                    if ("Issued Assets".equals(file.getChecklistName())) {
+                        fileExists = true; %>
+                        <a href="downloadFile?fileId=<%= file.getId() %>"><%= file.getFilename() %></a>
+                        <button onclick="deleteFile(<%= file.getId() %>)" disabled >Delete</button>
+                    <% }
+                }
+                if (!fileExists) { %>
+                    <input type="file" id="issuedAssetsFile" name="issuedAssetsFile" disabled onchange="setChecklistFileParameter('issuedAssetsFile', 'issuedAssetsIsChecklistFile')">
+                    <input type="hidden" id="issuedAssetsIsChecklistFile" name="issuedAssetsFile_isChecklistFile" value="false">
+                    <input type="hidden" name="issuedAssetsFile_checklistName" value="Issued Assets">
+                <% } %>
+            </td>
             <td style="text-align: center;"><label for="issuedAssetsDateCompleted"></label><input type="date" id="issuedAssetsDateCompleted" name="issuedAssetsDateCompleted" value="<%= employee.getIssuedAssetsDateCompleted() %>" disabled></td>
             <td style="text-align: center;"><label for="issuedAssetsRemarks"></label><input type="text" id="issuedAssetsRemarks" name="issuedAssetsRemarks" value="<%= employee.getIssuedAssetsRemarks() != null ? employee.getIssuedAssetsRemarks() : "" %>" disabled></td>
-            <td style="text-align: center;"><label for="issuedAssets"></label><input type="checkbox" id="issuedAssets" name="issuedAssets" data-id="date remarks" data-date-id="issuedAssetsDateCompleted" data-remarks-id="issuedAssetsRemarks" onclick="enableEditing(this, 'issuedAssetsDateCompleted', 'issuedAssetsRemarks')" <% if (employee.isIssuedAssets()) { %> checked <% } %> disabled></td>
+            <td style="text-align: center;"><label for="issuedAssets"></label><input type="checkbox" id="issuedAssets" name="issuedAssets" data-id="date remarks" data-date-id="issuedAssetsDateCompleted" data-remarks-id="issuedAssetsRemarks" data-file-exists="<%= fileExists %>" onclick="enableEditing(this, 'issuedAssetsDateCompleted', 'issuedAssetsRemarks', 'issuedAssetsFile')" <% if (employee.isIssuedAssets()) { %> checked <% } %> disabled></td>
         </tr>
         <tr>
             <td style="text-align: center;">Required Licenses</td>
+            <td style="text-align: center;">
+                <% fileExists = false; %>
+                <% for (EmployeeFile file : checklistFiles) {
+                    if ("Required Licenses".equals(file.getChecklistName())) {
+                        fileExists = true; %>
+                        <a href="downloadFile?fileId=<%= file.getId() %>"><%= file.getFilename() %></a>
+                        <button onclick="deleteFile(<%= file.getId() %>)" disabled >Delete</button>
+                    <% }
+                }
+                if (!fileExists) { %>
+                    <input type="file" id="requiredLicensesFile" name="requiredLicensesFile" disabled onchange="setChecklistFileParameter('requiredLicensesFile', 'requiredLicensesIsChecklistFile')">
+                    <input type="hidden" id="requiredLicensesIsChecklistFile" name="requiredLicensesFile_isChecklistFile" value="false">
+                    <input type="hidden" name="requiredLicensesFile_checklistName" value="Required Licenses">
+                <% } %>
+            </td>
             <td style="text-align: center;"><label for="requiredLicensesDateCompleted"></label><input type="date" id="requiredLicensesDateCompleted" name="requiredLicensesDateCompleted" value="<%= employee.getRequiredLicensesDateCompleted() %>" disabled></td>
             <td style="text-align: center;"><label for="requiredLicensesRemarks"></label><input type="text" id="requiredLicensesRemarks" name="requiredLicensesRemarks" value="<%= employee.getRequiredLicensesRemarks() != null ? employee.getRequiredLicensesRemarks() : "" %>" disabled></td>
-            <td style="text-align: center;"><label for="requiredLicenses"></label><input type="checkbox" id="requiredLicenses" name="requiredLicenses" data-id="date remarks" data-date-id="requiredLicensesDateCompleted" data-remarks-id="requiredLicensesRemarks" onclick="enableEditing(this, 'requiredLicensesDateCompleted', 'requiredLicensesRemarks')" <% if (employee.isRequiredLicenses()) { %> checked <% } %> disabled></td>
+            <td style="text-align: center;"><label for="requiredLicenses"></label><input type="checkbox" id="requiredLicenses" name="requiredLicenses" data-id="date remarks" data-date-id="requiredLicensesDateCompleted" data-remarks-id="requiredLicensesRemarks" data-file-exists="<%= fileExists %>" onclick="enableEditing(this, 'requiredLicensesDateCompleted', 'requiredLicensesRemarks', 'requiredLicensesFile')" <% if (employee.isRequiredLicenses()) { %> checked <% } %> disabled></td>
         </tr>
         <tr>
             <td style="text-align: center;">Trello Invite</td>
+            <td style="text-align: center;">
+                <% fileExists = false; %>
+                <% for (EmployeeFile file : checklistFiles) {
+                    if ("Trello Invite".equals(file.getChecklistName())) {
+                        fileExists = true; %>
+                        <a href="downloadFile?fileId=<%= file.getId() %>"><%= file.getFilename() %></a>
+                        <button onclick="deleteFile(<%= file.getId() %>)" disabled >Delete</button>
+                    <% }
+                }
+                if (!fileExists) { %>
+                    <input type="file" id="trelloInviteFile" name="trelloInviteFile" disabled onchange="setChecklistFileParameter('trelloInviteFile', 'trelloInviteIsChecklistFile')">
+                    <input type="hidden" id="trelloInviteIsChecklistFile" name="trelloInviteFile_isChecklistFile" value="false">
+                    <input type="hidden" name="trelloInviteFile_checklistName" value="Trello Invite">
+                <% } %>
+            </td>
             <td style="text-align: center;"><label for="trelloInviteDateCompleted"></label><input type="date" id="trelloInviteDateCompleted" name="trelloInviteDateCompleted" value="<%= employee.getTrelloInviteDateCompleted() %>" disabled></td>
             <td style="text-align: center;"><label for="trelloInviteRemarks"></label><input type="text" id="trelloInviteRemarks" name="trelloInviteRemarks" value="<%= employee.getTrelloInviteRemarks() != null ? employee.getTrelloInviteRemarks() : "" %>" disabled></td>
-            <td style="text-align: center;"><label for="trelloInvite"></label><input type="checkbox" id="trelloInvite" name="trelloInvite" data-id="date remarks" data-date-id="trelloInviteDateCompleted" data-remarks-id="trelloInviteRemarks" onclick="enableEditing(this, 'trelloInviteDateCompleted', 'trelloInviteRemarks')" <% if (employee.isTrelloInvite()) { %> checked <% } %> disabled></td>
+            <td style="text-align: center;"><label for="trelloInvite"></label><input type="checkbox" id="trelloInvite" name="trelloInvite" data-id="date remarks" data-date-id="trelloInviteDateCompleted" data-remarks-id="trelloInviteRemarks" data-file-exists="<%= fileExists %>" onclick="enableEditing(this, 'trelloInviteDateCompleted', 'trelloInviteRemarks', 'trelloInviteFile')" <% if (employee.isTrelloInvite()) { %> checked <% } %> disabled></td>
         </tr>
         <tr>
             <td style="text-align: center;">Teams/Shifts</td>
+            <td style="text-align: center;">
+                <% fileExists = false; %>
+                <% for (EmployeeFile file : checklistFiles) {
+                    if ("Teams/Shifts".equals(file.getChecklistName())) {
+                        fileExists = true; %>
+                        <a href="downloadFile?fileId=<%= file.getId() %>"><%= file.getFilename() %></a>
+                        <button onclick="deleteFile(<%= file.getId() %>)" disabled >Delete</button>
+                    <% }
+                }
+                if (!fileExists) { %>
+                    <input type="file" id="teamsShiftsFile" name="teamsShiftsFile" disabled onchange="setChecklistFileParameter('teamsShiftsFile', 'teamsShiftsIsChecklistFile')">
+                    <input type="hidden" id="teamsShiftsIsChecklistFile" name="teamsShiftsFile_isChecklistFile" value="false">
+                    <input type="hidden" name="teamsShiftsFile_checklistName" value="Teams/Shifts">
+                <% } %>
+            </td>
             <td style="text-align: center;"><label for="teamsShiftsDateCompleted"></label><input type="date" id="teamsShiftsDateCompleted" name="teamsShiftsDateCompleted" value="<%= employee.getTeamsShiftsDateCompleted() %>" disabled></td>
             <td style="text-align: center;"><label for="teamsShiftsRemarks"></label><input type="text" id="teamsShiftsRemarks" name="teamsShiftsRemarks" value="<%= employee.getTeamsShiftsRemarks() != null ? employee.getTeamsShiftsRemarks() : "" %>" disabled></td>
-            <td style="text-align: center;"><label for="teamsShifts"></label><input type="checkbox" id="teamsShifts" name="teamsShifts" data-id="date remarks" data-date-id="teamsShiftsDateCompleted" data-remarks-id="teamsShiftsRemarks" onclick="enableEditing(this, 'teamsShiftsDateCompleted', 'teamsShiftsRemarks')" <% if (employee.isTeamsShifts()) { %> checked <% } %> disabled></td>
+            <td style="text-align: center;"><label for="teamsShifts"></label><input type="checkbox" id="teamsShifts" name="teamsShifts" data-id="date remarks" data-date-id="teamsShiftsDateCompleted" data-remarks-id="teamsShiftsRemarks" data-file-exists="<%= fileExists %>" onclick="enableEditing(this, 'teamsShiftsDateCompleted', 'teamsShiftsRemarks', 'teamsShiftsFile')" <% if (employee.isTeamsShifts()) { %> checked <% } %> disabled></td>
         </tr>
         <tr>
             <td style="text-align: center;">Enrol to Payroll</td>
+            <td style="text-align: center;">
+                <% fileExists = false; %>
+                <% for (EmployeeFile file : checklistFiles) {
+                    if ("Enrol to Payroll".equals(file.getChecklistName())) {
+                        fileExists = true; %>
+                        <a href="downloadFile?fileId=<%= file.getId() %>"><%= file.getFilename() %></a>
+                        <button onclick="deleteFile(<%= file.getId() %>)" disabled >Delete</button>
+                    <% }
+                }
+                if (!fileExists) { %>
+                    <input type="file" id="enrolToPayrollFile" name="enrolToPayrollFile" disabled onchange="setChecklistFileParameter('enrolToPayrollFile', 'enrolToPayrollIsChecklistFile')">
+                    <input type="hidden" id="enrolToPayrollIsChecklistFile" name="enrolToPayrollFile_isChecklistFile" value="false">
+                    <input type="hidden" name="enrolToPayrollFile_checklistName" value="Enrol to Payroll">
+                <% } %>
+            </td>
             <td style="text-align: center;"><label for="enrolToPayrollDateCompleted"></label><input type="date" id="enrolToPayrollDateCompleted" name="enrolToPayrollDateCompleted" value="<%= employee.getEnrolToPayrollDateCompleted() %>" disabled></td>
             <td style="text-align: center;"><label for="enrolToPayrollRemarks"></label><input type="text" id="enrolToPayrollRemarks" name="enrolToPayrollRemarks" value="<%= employee.getEnrolToPayrollRemarks() != null ? employee.getEnrolToPayrollRemarks() : ""  %>" disabled></td>
-            <td style="text-align: center;"><label for="enrolToPayroll"></label><input type="checkbox" id="enrolToPayroll" name="enrolToPayroll" data-id="date remarks" data-date-id="enrolToPayrollDateCompleted" data-remarks-id="enrolToPayrollRemarks" onclick="enableEditing(this, 'enrolToPayrollDateCompleted', 'enrolToPayrollRemarks')" <% if (employee.isEnrolToPayroll()) { %> checked <% } %> disabled></td>
+            <td style="text-align: center;"><label for="enrolToPayroll"></label><input type="checkbox" id="enrolToPayroll" name="enrolToPayroll" data-id="date remarks" data-date-id="enrolToPayrollDateCompleted" data-remarks-id="enrolToPayrollRemarks" data-file-exists="<%= fileExists %>" onclick="enableEditing(this, 'enrolToPayrollDateCompleted', 'enrolToPayrollRemarks', 'enrolToPayrollFile')" <% if (employee.isEnrolToPayroll()) { %> checked <% } %> disabled></td>
         </tr>
     </table>
     <br>
@@ -426,6 +565,7 @@
         <!-- Table headers -->
         <tr>
             <th>Checklist Item</th>
+            <th>File</th>
             <th>Date Completed</th>
             <th>Remarks</th>
             <th>Check</th>
@@ -433,47 +573,120 @@
         <!-- Table rows -->
         <tr>
             <td style="text-align: center;">Certificate of Employment</td>
+            <td style="text-align: center;">
+                <% fileExists = false; %>
+                <% for (EmployeeFile file : checklistFiles) {
+                    if ("Certificate of Employment".equals(file.getChecklistName())) {
+                        fileExists = true; %>
+                        <a href="downloadFile?fileId=<%= file.getId() %>"><%= file.getFilename() %></a>
+                        <button onclick="deleteFile(<%= file.getId() %>)" disabled >Delete</button>
+                    <% }
+                }
+                if (!fileExists) { %>
+                    <input type="file" id="certificateEmploymentFile" name="certificateEmploymentFile" disabled onchange="setChecklistFileParameter('certificateEmploymentFile', 'certificateEmploymentIsChecklistFile')">
+                    <input type="hidden" id="certificateEmploymentIsChecklistFile" name="certificateEmploymentFile_isChecklistFile" value="false">
+                    <input type="hidden" name="certificateEmploymentFile_checklistName" value="Certificate of Employment">
+                <% } %>
+            </td>
             <td style="text-align: center;"><label for="certificateEmploymentDateCompleted"></label><input type="date" id="certificateEmploymentDateCompleted" name="certificateEmploymentDateCompleted" value="<%= employee.getCertificateEmploymentDateCompleted() %>" disabled></td>
             <td style="text-align: center;"><label for="certificateEmploymentRemarks"></label><input type="text" id="certificateEmploymentRemarks" name="certificateEmploymentRemarks" value="<%= employee.getCertificateEmploymentRemarks() != null ? employee.getCertificateEmploymentRemarks() : ""  %>" disabled></td>
             <td style="text-align: center;">
                 <label for="certificateEmployment"></label>
-                <input type="checkbox" id="certificateEmployment" name="certificateEmployment" data-id="date remarks" data-date-id="certificateEmploymentDateCompleted" data-remarks-id="certificateEmploymentRemarks" onclick="enableEditing(this, 'certificateEmploymentDateCompleted', 'certificateEmploymentRemarks')" <% if (employee.isCertificateEmployment()) { %> checked <% } %> disabled>
+                <input type="checkbox" id="certificateEmployment" name="certificateEmployment" data-id="date remarks" data-date-id="certificateEmploymentDateCompleted" data-remarks-id="certificateEmploymentRemarks" data-file-exists="<%= fileExists %>" onclick="enableEditing(this, 'certificateEmploymentDateCompleted', 'certificateEmploymentRemarks', 'certificateEmploymentFile')" <% if (employee.isCertificateEmployment()) { %> checked <% } %> disabled>
             </td>
         </tr>
         <tr>
             <td style="text-align: center;">BIR Form 2316</td>
+            <td style="text-align: center;">
+                <% fileExists = false; %>
+                <% for (EmployeeFile file : checklistFiles) {
+                    if ("BIR Form 2316".equals(file.getChecklistName())) {
+                        fileExists = true; %>
+                        <a href="downloadFile?fileId=<%= file.getId() %>"><%= file.getFilename() %></a>
+                        <button onclick="deleteFile(<%= file.getId() %>)" disabled >Delete</button>
+                    <% }
+                }
+                if (!fileExists) { %>
+                    <input type="file" id="birForm2316File" name="birForm2316File" disabled onchange="setChecklistFileParameter('birForm2316File', 'birForm2316IsChecklistFile')">
+                    <input type="hidden" id="birForm2316IsChecklistFile" name="birForm2316File_isChecklistFile" value="false">
+                    <input type="hidden" name="birForm2316File_checklistName" value="BIR Form 2316">
+                <% } %>
+            </td>
             <td style="text-align: center;"><label for="birForm2316DateCompleted"></label><input type="date" id="birForm2316DateCompleted" name="birForm2316DateCompleted" value="<%= employee.getBirForm2316DateCompleted() %>" disabled></td>
             <td style="text-align: center;"><label for="birForm2316Remarks"></label><input type="text" id="birForm2316Remarks" name="birForm2316Remarks" value="<%= employee.getBirForm2316Remarks() != null ? employee.getBirForm2316Remarks() : "" %>" disabled></td>
-            <td style="text-align: center;">
-                <label for="birForm2316"></label>
-                <input type="checkbox" id="birForm2316" name="birForm2316" data-id="date remarks" data-date-id="birForm2316DateCompleted" data-remarks-id="birForm2316Remarks" onclick="enableEditing(this, 'birForm2316DateCompleted', 'birForm2316Remarks')" <% if (employee.isBirForm2316()) { %> checked <% } %> disabled>
+            <td style="text-align: center;"><label for="birForm2316"></label><input type="checkbox" id="birForm2316" name="birForm2316" data-id="date remarks" data-date-id="birForm2316DateCompleted" data-remarks-id="birForm2316Remarks" data-file-exists="<%= fileExists %>" onclick="enableEditing(this, 'birForm2316DateCompleted', 'birForm2316Remarks', 'birForm2316File')" <% if (employee.isBirForm2316()) { %> checked <% } %> disabled>
             </td>
         </tr>
         <tr>
             <td style="text-align: center;">Return of Issued Assets</td>
+            <td style="text-align: center;">
+                <% fileExists = false; %>
+                <% for (EmployeeFile file : checklistFiles) {
+                    if ("Return of Issued Assets".equals(file.getChecklistName())) {
+                        fileExists = true; %>
+                        <a href="downloadFile?fileId=<%= file.getId() %>"><%= file.getFilename() %></a>
+                        <button onclick="deleteFile(<%= file.getId() %>)" disabled >Delete</button>
+                    <% }
+                }
+                if (!fileExists) { %>
+                    <input type="file" id="returnIssuedAssetsFile" name="returnIssuedAssetsFile" disabled onchange="setChecklistFileParameter('returnIssuedAssetsFile', 'returnIssuedAssetsIsChecklistFile')">
+                    <input type="hidden" id="returnIssuedAssetsIsChecklistFile" name="returnIssuedAssetsFile_isChecklistFile" value="false">
+                    <input type="hidden" name="returnIssuedAssetsFile_checklistName" value="Return of Issued Assets">
+                <% } %>
+            </td>
             <td style="text-align: center;"><label for="returnIssuedAssetsDateCompleted"></label><input type="date" id="returnIssuedAssetsDateCompleted" name="returnIssuedAssetsDateCompleted" value="<%= employee.getReturnIssuedAssetsDateCompleted() %>" disabled></td>
             <td style="text-align: center;"><label for="returnIssuedAssetsRemarks"></label><input type="text" id="returnIssuedAssetsRemarks" name="returnIssuedAssetsRemarks" value="<%= employee.getReturnIssuedAssetsRemarks() != null ? employee.getReturnIssuedAssetsRemarks() : "" %>" disabled></td>
             <td style="text-align: center;">
                 <label for="returnIssuedAssets"></label>
-                <input type="checkbox" id="returnIssuedAssets" name="returnIssuedAssets" data-id="date remarks" data-date-id="returnIssuedAssetsDateCompleted" data-remarks-id="returnIssuedAssetsRemarks" onclick="enableEditing(this, 'returnIssuedAssetsDateCompleted', 'returnIssuedAssetsRemarks')" <% if (employee.isReturnIssuedAssets()) { %> checked <% } %> disabled>
+                <input type="checkbox" id="returnIssuedAssets" name="returnIssuedAssets" data-id="date remarks" data-date-id="returnIssuedAssetsDateCompleted" data-remarks-id="returnIssuedAssetsRemarks" data-file-exists="<%= fileExists %>" onclick="enableEditing(this, 'returnIssuedAssetsDateCompleted', 'returnIssuedAssetsRemarks', 'returnIssuedAssetsFile')" <% if (employee.isReturnIssuedAssets()) { %> checked <% } %> disabled>
             </td>
         </tr>
         <tr>
             <td style="text-align: center;">Quitclaim + Final Pay</td>
+            <td style="text-align: center;">
+                <% fileExists = false; %>
+                <% for (EmployeeFile file : checklistFiles) {
+                    if ("Quitclaim + Final Pay".equals(file.getChecklistName())) {
+                        fileExists = true; %>
+                        <a href="downloadFile?fileId=<%= file.getId() %>"><%= file.getFilename() %></a>
+                        <button onclick="deleteFile(<%= file.getId() %>)" disabled >Delete</button>
+                    <% }
+                }
+                if (!fileExists) { %>
+                    <input type="file" id="quitclaimFinalPayFile" name="quitclaimFinalPayFile" disabled onchange="setChecklistFileParameter('quitclaimFinalPayFile', 'quitclaimFinalPayIsChecklistFile')">
+                    <input type="hidden" id="quitclaimFinalPayIsChecklistFile" name="quitclaimFinalPayFile_isChecklistFile" value="false">
+                    <input type="hidden" name="quitclaimFinalPayFile_checklistName" value="Quitclaim + Final Pay">
+                <% } %>
+            </td>
             <td style="text-align: center;"><label for="quitclaimFinalPayDateCompleted"></label><input type="date" id="quitclaimFinalPayDateCompleted" name="quitclaimFinalPayDateCompleted" value="<%= employee.getQuitclaimFinalPayDateCompleted() %>" disabled></td>
             <td style="text-align: center;"><label for="quitclaimFinalPayRemarks"></label><input type="text" id="quitclaimFinalPayRemarks" name="quitclaimFinalPayRemarks" value="<%= employee.getQuitclaimFinalPayRemarks() != null ? employee.getQuitclaimFinalPayRemarks() : "" %>" disabled></td>
             <td style="text-align: center;">
                 <label for="quitclaimFinalPay"></label>
-                <input type="checkbox" id="quitclaimFinalPay" name="quitclaimFinalPay" data-id="date remarks" data-date-id="quitclaimFinalPayDateCompleted" data-remarks-id="quitclaimFinalPayRemarks" onclick="enableEditing(this, 'quitclaimFinalPayDateCompleted', 'quitclaimFinalPayRemarks')" <% if (employee.isQuitclaimFinalPay()) { %> checked <% } %> disabled>
+                <input type="checkbox" id="quitclaimFinalPay" name="quitclaimFinalPay" data-id="date remarks" data-date-id="quitclaimFinalPayDateCompleted" data-remarks-id="quitclaimFinalPayRemarks" data-file-exists="<%= fileExists %>" onclick="enableEditing(this, 'quitclaimFinalPayDateCompleted', 'quitclaimFinalPayRemarks', 'quitclaimFinalPayFile')" <% if (employee.isQuitclaimFinalPay()) { %> checked <% } %> disabled>
             </td>
         </tr>
         <tr>
             <td style="text-align: center;">Knowledge Transfer Sheet</td>
+            <td style="text-align: center;">
+                <% fileExists = false; %>
+                <% for (EmployeeFile file : checklistFiles) {
+                    if ("Knowledge Transfer Sheet".equals(file.getChecklistName())) {
+                        fileExists = true; %>
+                        <a href="downloadFile?fileId=<%= file.getId() %>"><%= file.getFilename() %></a>
+                        <button onclick="deleteFile(<%= file.getId() %>)" disabled >Delete</button>
+                    <% }
+                }
+                if (!fileExists) { %>
+                    <input type="file" id="knowledgeTransferSheetFile" name="knowledgeTransferSheetFile" disabled onchange="setChecklistFileParameter('knowledgeTransferSheetFile', 'knowledgeTransferSheetIsChecklistFile')">
+                    <input type="hidden" id="knowledgeTransferSheetIsChecklistFile" name="knowledgeTransferSheetFile_isChecklistFile" value="false">
+                    <input type="hidden" name="knowledgeTransferSheetFile_checklistName" value="Knowledge Transfer Sheet">
+                <% } %>
+            </td>
             <td style="text-align: center;"><label for="knowledgeTransferSheetDateCompleted"></label><input type="date" id="knowledgeTransferSheetDateCompleted" name="knowledgeTransferSheetDateCompleted" value="<%= employee.getKnowledgeTransferSheetDateCompleted() %>" disabled></td>
             <td style="text-align: center;"><label for="knowledgeTransferSheetRemarks"></label><input type="text" id="knowledgeTransferSheetRemarks" name="knowledgeTransferSheetRemarks" value="<%= employee.getKnowledgeTransferSheetRemarks() != null ? employee.getKnowledgeTransferSheetRemarks() : "" %>" disabled></td>
             <td style="text-align: center;">
                 <label for="knowledgeTransferSheet"></label>
-                <input type="checkbox" id="knowledgeTransferSheet" name="knowledgeTransferSheet" data-id="date remarks" data-date-id="knowledgeTransferSheetDateCompleted" data-remarks-id="knowledgeTransferSheetRemarks" onclick="enableEditing(this, 'knowledgeTransferSheetDateCompleted', 'knowledgeTransferSheetRemarks')" <% if (employee.isKnowledgeTransferSheet()) { %> checked <% } %> disabled>
+                <input type="checkbox" id="knowledgeTransferSheet" name="knowledgeTransferSheet" data-id="date remarks" data-date-id="knowledgeTransferSheetDateCompleted" data-remarks-id="knowledgeTransferSheetRemarks" data-file-exists="<%= fileExists %>" onclick="enableEditing(this, 'knowledgeTransferSheetDateCompleted', 'knowledgeTransferSheetRemarks', 'knowledgeTransferSheetFile')" <% if (employee.isKnowledgeTransferSheet()) { %> checked <% } %> disabled>
             </td>
         </tr>
     </table>
@@ -494,16 +707,22 @@
             if (booleanValue) {
                 resignationDetails.style.display = "block";
                 resignationDateInput.disabled = false;
+                resignationDateInput.required = true;
                 lastDayInput.disabled = false;
+                lastDayInput.required = true;
                 finalPayReleaseDateInput.disabled = false;
+                finalPayReleaseDateInput.required = true;
             } else {
                 resignationDetails.style.display = "none";
                 resignationDateInput.value = "";
                 lastDayInput.value = "";
                 finalPayReleaseDateInput.value = "";
                 resignationDateInput.disabled = true;
+                resignationDateInput.required = false;
                 lastDayInput.disabled = true;
+                lastDayInput.required = false;
                 finalPayReleaseDateInput.disabled = true;
+                finalPayReleaseDateInput.required = false;
             }
 
             // Set the corresponding boolean value
@@ -552,13 +771,13 @@
     <br>
     <div id="resignationDetails">
         <!-- Resignation Date -->
-        <label for="resignationDate">Resignation Date:</label>
+        <label for="resignationDate">Resignation Date: <span style="color: red;">*</span></label>
         <input type="date" id="resignationDate" name="resignationDate" value="<%= employee.getResignationDate() %>" disabled ><br><br>
         <!-- Last Day -->
-        <label for="lastDay">Last Day:</label>
+        <label for="lastDay">Last Day: <span style="color: red;">*</span></label>
         <input type="date" id="lastDay" name="lastDay" value="<%= employee.getLastDay() %>" disabled ><br><br>
         <!-- Final Pay Release Date -->
-        <label for="finalPayReleaseDate">Final Pay Release Date:</label>
+        <label for="finalPayReleaseDate">Final Pay Release Date: <span style="color: red;">*</span></label>
         <input type="date" id="finalPayReleaseDate" name="finalPayReleaseDate" value="<%= employee.getFinalPayReleaseDate() %>" disabled ><br><br>
     </div>
     <br>
@@ -567,15 +786,15 @@
 
 
     <!-- FILE UPLOAD -->
-    <h2>FILE UPLOAD</h2>
+    <h2>ADDITIONAL FILES UPLOAD</h2>
     <!-- File upload section -->
-    <label for="file">Upload Files:</label>
+    <label for="file">Upload Additional Files:</label>
     <input type="file" id="file" name="file" multiple disabled ><br>
     <!-- Display uploaded files -->
     <h3>Uploaded Files:</h3>
     <ul>
-        <% if (files != null) { %>
-        <% for (EmployeeFile file : files) { %>
+        <% if (additionalFiles != null) { %>
+        <% for (EmployeeFile file : additionalFiles) { %>
         <li>
             <a href="downloadFile?fileId=<%= file.getId() %>" target="_blank"><%= file.getFilename() %></a>
             <!-- Delete button with onclick event to call deleteFile function -->
@@ -601,28 +820,33 @@
     <!-- Script to enable or disable editing of fields -->
     <script>
         // Function to toggle editing of date completed and remarks fields
-        function toggleDateCompletedAndRemarksFields() {
+        function toggleFileUploadButtonDateCompletedAndRemarksFields() {
             let checkboxes = document.querySelectorAll('input[type="checkbox"][data-id="date remarks"]');
+            let fileUploadButtons = document.querySelectorAll('table input[type="file"]');
 
-            checkboxes.forEach(function(checkbox) {
+            fileUploadButtons.forEach(function(button) {
+                let checkboxId = button.id.replace('File', ''); // Get the id of the associated checkbox
+                let checkbox = document.getElementById(checkboxId);
                 let dateCompletedInput = document.getElementById(checkbox.dataset.dateId);
                 let remarksInput = document.getElementById(checkbox.dataset.remarksId);
 
                 if (!checkbox.disabled && checkbox.checked) {
                     dateCompletedInput.disabled = false;
                     remarksInput.disabled = false;
+                    button.disabled = false; // Enable the file upload button
                 } else if (!checkbox.disabled && !checkbox.checked) {
                     dateCompletedInput.disabled = true;
                     remarksInput.disabled = true;
                     dateCompletedInput.value = ""; // Clear the value
                     remarksInput.value = ""; // Clear the value
+                    button.disabled = true; // Disable the file upload button
                 } else {
                     dateCompletedInput.disabled = true;
                     remarksInput.disabled = true;
+                    button.disabled = true; // Disable the file upload button
                 }
             });
         }
-
 
         // Function to toggle all fields
         function toggleAllFields() {
@@ -637,8 +861,14 @@
                 button.disabled = !button.disabled;
             });
 
-            // Call toggleDateCompletedAndRemarksFields function to update date completed and remarks fields
-            toggleDateCompletedAndRemarksFields();
+            // Enable or disable delete buttons for checklist files
+            let checklistDeleteButtons = document.querySelectorAll('td button');
+            checklistDeleteButtons.forEach(function(button) {
+                button.disabled = !button.disabled;
+            });
+
+            // Call toggleDateCompletedAndRemarksFields function to update file uploaded buttons, date completed and remarks fields
+            toggleFileUploadButtonDateCompletedAndRemarksFields();
 
             // Toggle the visibility of the "Save Changes" button
             let saveChangesButton = document.getElementById("saveChangesButton");

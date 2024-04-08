@@ -137,7 +137,7 @@
             padding-top: 7vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: flex-start;
             background-color: #000040;
         }
         .nav-menu button {
@@ -150,6 +150,7 @@
             transition: background-color 0.3s;
             font-family: 'Pixeloid Sans', sans-serif;
             font-size: 0.8vw;
+            text-align: left;
         }
         .nav-menu button:not(.close-button) {
             margin-top: 5px;

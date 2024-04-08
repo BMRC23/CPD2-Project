@@ -9,13 +9,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Paths;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.format.DateTimeParseException;
+import java.util.logging.Logger;
 
 /**
  * Servlet implementation class for editing a profile.
@@ -24,7 +24,7 @@ import java.time.format.DateTimeParseException;
 @WebServlet(name = "EditProfileServlet", value = "/editProfile")
 @MultipartConfig
 public class EditProfileServlet extends HttpServlet {
-
+    private static final Logger LOGGER = Logger.getLogger(CreateProfileServlet.class.getName());
     /**
      * Handles the HTTP POST method used to edit a profile.
      * This method retrieves the form parameters from the request, updates the employee's data in the database,
@@ -100,17 +100,20 @@ public class EditProfileServlet extends HttpServlet {
         boolean resigned = Boolean.parseBoolean(request.getParameter("resigned"));
 
         // Handle file uploads
-        List<String> fileNames = new ArrayList<>();
-        List<InputStream> fileContents = new ArrayList<>();
-        List<String> fileTypes = new ArrayList<>();
+        List<EmployeeFile> employeeFiles = new ArrayList<>();
 
         for (Part filePart : request.getParts()) {
-            if ("file".equals(filePart.getName()) && filePart.getSize() > 0) {
-                String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // Get name of file
-                String fileType = filePart.getContentType(); // Get the MIME type of the file
-                fileNames.add(fileName);
-                fileContents.add(filePart.getInputStream());
-                fileTypes.add(fileType);
+            if (filePart.getSize() > 0) {
+                String submittedFileName = filePart.getSubmittedFileName();
+                if (submittedFileName != null) {
+                    String fileName = Paths.get(submittedFileName).getFileName().toString(); // Get name of file
+                    String fileType = filePart.getContentType(); // Get the MIME type of the file
+                    boolean isChecklistFile = Boolean.parseBoolean(request.getParameter(filePart.getName() + "_isChecklistFile")); // Get the isChecklistFile parameter
+                    String checklistName = request.getParameter(filePart.getName() + "_checklistName"); // Get the checklistName parameter
+                    LOGGER.info("isChecklistFile: " + isChecklistFile);
+                    LOGGER.info("checklistName: " + checklistName);
+                    employeeFiles.add(new EmployeeFile(0, 0, isChecklistFile, checklistName, fileName, fileType, filePart.getInputStream().readAllBytes()));
+                }
             }
         }
 
@@ -125,7 +128,7 @@ public class EditProfileServlet extends HttpServlet {
                 "issuedAssets=?, requiredLicenses=?, trelloInvite=?, teamsShifts=?, enrolToPayroll=?, certificateEmployment=?, birForm2316=?, returnIssuedAssets=?, quitclaimFinalPay=?, knowledgeTransferSheet=? WHERE id=?";
 
 
-        String sqlFile = "INSERT INTO EmployeeFiles (employee_id, filename, filetype, filedata) VALUES (?, ?, ?, ?)";
+        String sqlFile = "INSERT INTO EmployeeFiles (employee_id, isChecklistFile, checklistName, filename, filetype, filedata) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = db.getConnection();
              PreparedStatement stmtEmployee = conn.prepareStatement(sqlEmployee);
@@ -193,11 +196,13 @@ public class EditProfileServlet extends HttpServlet {
             }
 
             // Process file uploads
-            for (int i = 0; i < fileNames.size(); i++) {
+            for (EmployeeFile employeeFile : employeeFiles) {
                 stmtFile.setInt(1, id);
-                stmtFile.setString(2, fileNames.get(i));
-                stmtFile.setString(3, fileTypes.get(i));
-                stmtFile.setBlob(4, fileContents.get(i));
+                stmtFile.setBoolean(2, employeeFile.getIsChecklistFile());
+                stmtFile.setString(3, employeeFile.getChecklistName());
+                stmtFile.setString(4, employeeFile.getFilename());
+                stmtFile.setString(5, employeeFile.getFiletype());
+                stmtFile.setBytes(6, employeeFile.getFiledata());
                 stmtFile.executeUpdate();
             }
 

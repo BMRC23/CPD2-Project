@@ -109,10 +109,13 @@ public class DatabaseConnection {
                     "CREATE TABLE IF NOT EXISTS EmployeeFiles " +
                     "(id INT AUTO_INCREMENT PRIMARY KEY, " +
                     "employee_id INT, " +
+                    "isChecklistFile BOOLEAN DEFAULT FALSE NOT NULL, " +
+                    "checklistName VARCHAR(255), " +
                     "filename VARCHAR(255) NOT NULL, " +
                     "filetype VARCHAR(100) NOT NULL, " +
                     "filedata BLOB NOT NULL, " +
                     "FOREIGN KEY (employee_id) REFERENCES Employee(id));";
+
             stmt.executeUpdate(sql);
         } catch (SQLException e) {
             e.printStackTrace();

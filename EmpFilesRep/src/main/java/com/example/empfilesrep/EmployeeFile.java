@@ -3,13 +3,17 @@ package com.example.empfilesrep;
 public class EmployeeFile {
     private int id;
     private int employeeId;
+    private boolean isChecklistFile;
+    private String checklistName;
     private String filename;
     private String filetype;
     private byte[] filedata;
 
-    public EmployeeFile(int id, int employeeId, String filename, String filetype, byte[] filedata) {
+    public EmployeeFile(int id, int employeeId, boolean isChecklistFile, String checklistName, String filename, String filetype, byte[] filedata) {
         this.id = id;
         this.employeeId = employeeId;
+        this.isChecklistFile = isChecklistFile;
+        this.checklistName = checklistName;
         this.filename = filename;
         this.filetype = filetype;
         this.filedata = filedata;
@@ -30,6 +34,22 @@ public class EmployeeFile {
 
     public void setEmployeeId(int employeeId) {
         this.employeeId = employeeId;
+    }
+
+    public boolean getIsChecklistFile() {
+        return isChecklistFile;
+    }
+
+    public void setIsChecklistFile(boolean isChecklistFile) {
+        this.isChecklistFile = isChecklistFile;
+    }
+
+    public String getChecklistName() {
+        return checklistName;
+    }
+
+    public void setChecklistName(String checklistName) {
+        this.checklistName = checklistName;
     }
 
     public String getFilename() {

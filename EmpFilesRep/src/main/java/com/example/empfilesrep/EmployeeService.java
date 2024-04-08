@@ -127,6 +127,8 @@ public class EmployeeService {
                 EmployeeFile employeeFile = new EmployeeFile(
                         rs.getInt("id"),
                         rs.getInt("employee_id"),
+                        rs.getBoolean("isChecklistFile"),
+                        rs.getString("checklistName"),
                         rs.getString("filename"),
                         rs.getString("filetype"),
                         rs.getBytes("filedata")
@@ -139,6 +141,78 @@ public class EmployeeService {
 
         return employeeFiles;
     }
+
+    public static List<EmployeeFile> getAdditionalEmployeeFilesFromDatabase(int id) {
+        List<EmployeeFile> additionalFiles = new ArrayList<>();
+
+        // Establish Database connection
+        DatabaseConnection db = new DatabaseConnection();
+
+        // SQL query to select all employee files
+        String sql = "SELECT * FROM employeefiles WHERE employee_id = ? AND isChecklistFile = false";
+
+        try (Connection conn = db.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+
+            // Iterate through the result set and create EmployeeFile objects
+            while (rs.next()) {
+                EmployeeFile additionalFile = new EmployeeFile(
+                        rs.getInt("id"),
+                        rs.getInt("employee_id"),
+                        rs.getBoolean("isChecklistFile"),
+                        rs.getString("checklistName"),
+                        rs.getString("filename"),
+                        rs.getString("filetype"),
+                        rs.getBytes("filedata")
+                );
+                additionalFiles.add(additionalFile);
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error retrieving employee files from the database", e);
+        }
+
+        return additionalFiles;
+    }
+
+    public static List<EmployeeFile> getEmployeeChecklistFilesFromDatabase(int id) {
+        List<EmployeeFile> checklistFiles = new ArrayList<>();
+
+        // Establish Database connection
+        DatabaseConnection db = new DatabaseConnection();
+
+        // SQL query to select all employee files
+        String sql = "SELECT * FROM employeefiles WHERE employee_id = ? AND isChecklistFile = true";
+
+        try (Connection conn = db.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+
+            // Iterate through the result set and create EmployeeFile objects
+            while (rs.next()) {
+                EmployeeFile checklistFile = new EmployeeFile(
+                        rs.getInt("id"),
+                        rs.getInt("employee_id"),
+                        rs.getBoolean("isChecklistFile"),
+                        rs.getString("checklistName"),
+                        rs.getString("filename"),
+                        rs.getString("filetype"),
+                        rs.getBytes("filedata")
+                );
+                checklistFiles.add(checklistFile);
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error retrieving employee files from the database", e);
+        }
+
+        return checklistFiles;
+    }
+
+
 
     /**
      * Fetches the list of resigned employees from the database.

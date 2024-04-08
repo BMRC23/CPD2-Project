@@ -15,7 +15,6 @@ import java.util.List;
  */
 @WebServlet(name = "ViewProfileServlet", value = "/viewProfile")
 public class ViewProfileServlet extends HttpServlet {
-
     /**
      * Handles the HTTP GET method used to display an employee profile.
      * This method retrieves the employee ID from the request parameters, fetches the corresponding employee and their files from the database,
@@ -34,13 +33,15 @@ public class ViewProfileServlet extends HttpServlet {
         Employee employee = EmployeeService.getEmployeeById(employeeId);
 
         // Retrieve the files of the employee from the database
-        List<EmployeeFile> files = EmployeeService.getAllEmployeeFilesFromDatabase(employeeId);
+        List<EmployeeFile> additionalFiles = EmployeeService.getAdditionalEmployeeFilesFromDatabase(employeeId);
+        List<EmployeeFile> checklistFiles = EmployeeService.getEmployeeChecklistFilesFromDatabase(employeeId);
 
         // Check if the employee object is not null
         if (employee != null) {
             // Set the employee object and their files as request attributes
             request.setAttribute("employee", employee);
-            request.setAttribute("files", files);
+            request.setAttribute("additionalFiles", additionalFiles);
+            request.setAttribute("checklistFiles", checklistFiles);
 
             // Forward the request to the profile view page for rendering
             RequestDispatcher dispatcher = request.getRequestDispatcher("/viewProfile.jsp");
